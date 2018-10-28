@@ -13,13 +13,35 @@ function filterRecursively(nodeArray, childrenProperty, filterFn, results) {
   results = results || [];
 
   nodeArray.forEach( function( node ) {
-    if (filterFn(node)) results.push( node );
-    if (node.children) filterRecursively(node.children, childrenProperty, filterFn, results);
+    if (filterFn(node)) {
+        results.push( node );
+    }
+    if (node.children) {
+        filterRecursively(node.children, childrenProperty, filterFn, results);
+    }
   });
 
   return results;
 
 };
+
+function setFullPathRecursively(el, node, title) {
+
+  var currentNode = node;
+
+  var getParentNode = chrome.bookmarks.get(currentNode.parentId, function( parentNode ) {
+    if (parentNode[0] && parentNode[0].parentId > 0) {
+      console.log(parentNode[0].title);
+      title += " > " + parentNode[0].title;
+      currentNode = parentNode[0];
+      setFullPathRecursively(el, currentNode, title);
+    } else {
+      setTimeout( function() {
+        el.setAttribute("data-tooltip", title);
+      }, 0);
+    }
+  });
+}
 
 function createUiElement(node) {
 
@@ -27,10 +49,17 @@ function createUiElement(node) {
   el.setAttribute("data-id", node.id);
   el.setAttribute("data-count", node.children.length);
   el.setAttribute("data-title", node.title);
+  el.setAttribute("data-parent-id", node.parentId);
+  var getParentNode = chrome.bookmarks.get(node.parentId, function( parentNode ) {
+    if (parentNode[0] && parentNode[0].parentId > 0) {
+      setFullPathRecursively(el, node, '');
+    }
+  });
+  // TODO: get position of the tooltip from extension options
+  el.setAttribute("data-tooltip-position", "bottom"); // position of the tooltip
+
   el.innerHTML = node.title;
-
   return el;
-
 }
 
 function triggerClick(element) {
@@ -123,6 +152,9 @@ function addCreateCategoryButton(categoryName) {
   var el = document.createElement("span");
   el.setAttribute("data-id", "NEW");
   el.setAttribute("data-title", categoryName);
+  el.setAttribute("data-tooltip", "Add new folder to bookmarks");
+  // TODO: get position of the tooltip from extension's options
+  el.setAttribute("data-tooltip-position", "bottom"); // position of the tooltip
   el.classList.add("create");
   el.innerHTML = chrome.i18n.getMessage("new") + ": " + categoryName;
 
@@ -141,9 +173,9 @@ function createInitialTree() {
       keys: ['title'],
       threshold: 0.4
     }
-    
+
     categoryNodes = filterRecursively(t, "children", function(node) {
-      return !node.url && node.id > 0;
+      return !node.url && node.id > 0; // include folders only
     }).sort(function(a, b) {
       return b.dateGroupModified - a.dateGroupModified;
     })
@@ -189,15 +221,16 @@ function createInitialTree() {
 
     } else if (e.keyCode == CONFIRM_KEYCODE) {
       if (currentNodeCount > 0) triggerClick(focusedElement);
-    
+
     } else {
       // to get updated input value, we need to schedule it to the next tick
       setTimeout( function() {
         text = document.getElementById("search").value;
         if (text.length) {
           newNodes = fuzzySearch.search(text);
-          resetUi(); 
-          createUiFromNodes(newNodes) 
+          resetUi();
+          createUiFromNodes(newNodes);
+
           if (newNodes.length) focusItem(0);
 
           if (!newNodes.length || text !== newNodes[0].title) {
