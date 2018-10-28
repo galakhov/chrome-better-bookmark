@@ -25,19 +25,18 @@ function filterRecursively(nodeArray, childrenProperty, filterFn, results) {
 
 };
 
-function setFullPathRecursively(el, node, title) {
+function setFullPathRecursively(el, node, titles) {
 
   var currentNode = node;
 
   var getParentNode = chrome.bookmarks.get(currentNode.parentId, function( parentNode ) {
     if (parentNode[0] && parentNode[0].parentId > 0) {
-      console.log(parentNode[0].title);
-      title += " > " + parentNode[0].title;
+      titles.unshift(parentNode[0].title);
       currentNode = parentNode[0];
-      setFullPathRecursively(el, currentNode, title);
+      setFullPathRecursively(el, currentNode, titles);
     } else {
       setTimeout( function() {
-        el.setAttribute("data-tooltip", title);
+        el.setAttribute("data-tooltip", titles.join(" > "));
       }, 0);
     }
   });
@@ -52,7 +51,7 @@ function createUiElement(node) {
   el.setAttribute("data-parent-id", node.parentId);
   var getParentNode = chrome.bookmarks.get(node.parentId, function( parentNode ) {
     if (parentNode[0] && parentNode[0].parentId > 0) {
-      setFullPathRecursively(el, node, '');
+      setFullPathRecursively(el, node, []);
     }
   });
   // TODO: get position of the tooltip from extension options
