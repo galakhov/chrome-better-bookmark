@@ -1,3 +1,8 @@
+This Fork
+======================
+
+Better-Bookmark-Button extension is now equipped with captions showing the full path to the hovered category.
+
 chrome-better-bookmark
 ======================
 
@@ -12,7 +17,7 @@ Chrome allows you to set your own key binding for every extension. See https://g
 
 TODO
 ====
-
- - options (font size and style, focus style, key bindings, sorting options)
+ - Add options (font size and style, focus style, key bindings, sorting options)
+ - Add position of the tooltip into extension options
  - TBD: icon should be greyed out by default, highlighted if the page is already bookmarked
  - TBD: subcategory indentation?
