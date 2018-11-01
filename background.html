@@ -11,7 +11,7 @@
         margin: 0 0 10px 0;
     }
 
-    span {
+    span, p {
         font-family: "Lucida Grande", Tahoma, sans-serif;
         font-size: 14px;
         color: #666;
@@ -21,6 +21,17 @@
         /*border-top: 1px solid #e0efef;*/
         cursor: pointer;
         -webkit-transition: background 0.1s ease-out;
+    }
+
+    p:first-child {
+        margin-bottom: 4px;
+    }
+
+    p {
+        white-space: normal;
+        font-size: 12px;
+        cursor: default;
+        margin-top: 0;
     }
 
     span:hover + span:not(.create), .focus + span:not(.create) {
@@ -46,6 +57,35 @@
     #wrapper {
         min-width: 60px;
         text-align: right;
+    }
+
+    .bookmark__title {
+        display: inline-block;
+    }
+
+    .bookmark__parent-id-selector {
+        width: 5%;
+        margin-bottom: 0px;
+        display: inline-block;
+        height: 12px;
+    }
+
+    .bookmark__parent-output {
+        max-width: 98%;
+        -webkit-transition: opacity 0.5s ease-out;
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .bookmark__parent-hidden {
+
+    }
+
+    .visible {
+        height: auto;
+        opacity: 1;
+        overflow: auto;
     }
 
     /* thanks to: https://stackoverflow.com/questions/1055581/how-do-i-add */
@@ -155,7 +195,7 @@
     }
 
 </style>
-<input id="search" placeholder="Filter folder..."></input>
+<input id="search" placeholder="Filter directories..."></input>
 <div id="wrapper"></div>
 <script src="fuse.js"></script>
 <script src="selectCategory.js"></script>

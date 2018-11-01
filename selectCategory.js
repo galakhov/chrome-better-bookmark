@@ -44,24 +44,70 @@ function setFullPathRecursively(el, node, titles) {
 
 function createUiElement(node) {
 
-  var el = document.createElement("span");
+  var el = document.createElement("div");
   el.setAttribute("data-id", node.id);
   el.setAttribute("data-count", node.children.length);
   el.setAttribute("data-title", node.title);
   el.setAttribute("data-parent-id", node.parentId);
+  el.classList.add("bookmark");
   var getParentNode = chrome.bookmarks.get(node.parentId, function( parentNode ) {
     if (parentNode[0] && parentNode[0].parentId > 0) {
       setFullPathRecursively(el, node, []);
     }
   });
-  // TODO: get position of the tooltip from extension options
+  // TODO: get position of the tooltip from the extension options and pass it over here
   el.setAttribute("data-tooltip-position", "bottom"); // position of the tooltip
+  el.innerHTML = "<span class='bookmark__title'>" + node.title + "</span>";
+  el = appendRadioButtonParentSelector(el, node.parentId);
 
-  el.innerHTML = node.title;
   return el;
 }
 
+function appendRadioButtonParentSelector(el, parentId) {
+    var theInput = document.createElement("input");
+    theInput.setAttribute('type', "radio");
+    theInput.setAttribute('name', "parent-id");
+    theInput.setAttribute('class', "bookmark__parent-id-selector");
+    theInput.setAttribute('value', parentId);
+    // if radio button was clicked grab the value of the parent and pass it over
+    theInput.addEventListener("click", function(e) {
+      var parentSelected = this.parentNode;
+      if (parentSelected != null) {
+        var dirName = parentSelected.getAttribute('data-tooltip');
+        if (dirName != null) {
+             dirName += " > ";
+        } else {
+            dirName = '';
+        }
+        dirName += parentSelected.getElementsByTagName("span")[0].textContent;
+
+        var output = document.querySelector('.bookmark__parent-output header');
+        if (output != null) {
+            output.innerHTML = "<p><strong>" + chrome.i18n.getMessage("parentdir") + ":</strong></p>";
+            output.innerHTML += "<p>" + dirName + "</p>";
+            if (!output.parentNode.classList.contains('visible')) {
+                output.parentNode.classList.add('visible');
+            }
+            var hiddenInput = document.querySelector('.bookmark__parent-hidden');
+            hiddenInput.setAttribute("value", parentSelected.getAttribute('data-id'));
+
+        }
+      }
+    });
+    el.appendChild(theInput);
+
+    return el;
+}
+
+function handleChangeOfParentSelector() {
+
+}
+
 function triggerClick(element) {
+
+  if (element.nodeName.toLowerCase() === 'span') {
+      element = element.parentNode;
+  }
 
   var categoryId = element.getAttribute("data-id");
   var newCategoryTitle;
@@ -70,16 +116,16 @@ function triggerClick(element) {
 
     newCategoryTitle = element.getAttribute("data-title");
 
+    var checkedElId = document.querySelector('.bookmark__parent-hidden');
+    var selectedParentId = selectedParentId != null ? checkedElId.value : null;
     chrome.bookmarks.create({
-      title: newCategoryTitle
+      'parentId': selectedParentId,
+      'title': newCategoryTitle
     }, function(res) {
       processBookmark(res.id);
     })
-
   } else {
-
     processBookmark(categoryId);
-
   }
 
 }
@@ -141,25 +187,40 @@ function focusItem(index) {
   if (focusedElement) focusedElement.classList.remove("focus");
   focusedElement = wrapper.childNodes[index];
   focusedElement.classList.add("focus");
-
   focusedElement.scrollIntoView(false);
 
 }
 
 function addCreateCategoryButton(categoryName) {
 
-  var el = document.createElement("span");
+  var el = document.createElement("div");
   el.setAttribute("data-id", "NEW");
   el.setAttribute("data-title", categoryName);
-  el.setAttribute("data-tooltip", "Add new folder to bookmarks");
-  // TODO: get position of the tooltip from extension's options
-  el.setAttribute("data-tooltip-position", "bottom"); // position of the tooltip
+  // TODO: create options
+  // TODO: parse the position of the tooltip from extension's options
+  el.setAttribute("data-tooltip-position", "bottom"); // set position of the tooltip
   el.classList.add("create");
-  el.innerHTML = chrome.i18n.getMessage("new") + ": " + categoryName;
+  el.setAttribute("data-tooltip", chrome.i18n.getMessage("caption"));
+  el.innerHTML = "<span>" + chrome.i18n.getMessage("new") + ": " + categoryName + "</span>";
 
   wrapper.appendChild(el);
   currentNodeCount = currentNodeCount + 1;
 
+}
+
+function addHiddenOutput() {
+    // add hidden element to output a parent directory later
+    var output = document.createElement("div");
+    output.setAttribute("class", "bookmark__parent-output");
+    var header = document.createElement("header");
+    output.appendChild(header);
+    var input = document.createElement("input");
+    input.setAttribute("type", "hidden");
+    input.setAttribute("name", "parentid");
+    input.setAttribute("class", "bookmark__parent-hidden");
+    output.appendChild(input);
+
+    return output;
 }
 
 function createInitialTree() {
@@ -186,6 +247,9 @@ function createInitialTree() {
     if (currentNodeCount > 0) focusItem(0);
 
     fuzzySearch = new Fuse(categoryNodes, options);
+
+    var hiddenOutput = addHiddenOutput();
+    wrapper.parentNode.insertBefore(hiddenOutput, wrapper);
 
     wrapper.addEventListener("click", function(e) {
       triggerClick(e.target);

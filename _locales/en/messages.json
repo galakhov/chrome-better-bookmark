@@ -1,6 +1,14 @@
 {
-  "new": {
-    "message": "new",
-    "description": "New category caption."
-  }
+    "new": {
+        "message": "add new directory in that parent &#8599;",
+        "description": "New category text"
+    },
+    "caption": {
+        "message": "Creates new directory in a chosen parent directory from the list above",
+        "description": "Caption to show on mouse over"
+    },
+    "parentdir": {
+        "message": "This parent directory is chosen",
+        "description": "Chosen parent directory"
+    }
 }
