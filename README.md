@@ -2,6 +2,7 @@ This Fork
 ======================
 
 Better-Bookmark-Button extension is now equipped with captions showing the full path to the hovered category.
+Now you can also choose the parent directory of the new folder that is being created.
 
 chrome-better-bookmark
 ======================
