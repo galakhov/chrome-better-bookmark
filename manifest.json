@@ -2,9 +2,10 @@
   "manifest_version": 2,
 
   "name": "Better Bookmark",
-  "description": "Easily add bookmarks to any category. Includes spotlight-like search with mouse/keyboard support. Default key: cmd+b (win:ctrl+b)",
+  "description":
+    "Easily add bookmarks to any category. Includes spotlight-like search with mouse/keyboard support. Default key: cmd+b (win:ctrl+b)",
   "version": "1.5.0",
-  "author": "Szymon Pilkowski",
+  "author": "Szymon Pilkowski, Dmitry Galakhov",
   "homepage_url": "https://github.com/galakhov/chrome-better-bookmark",
   "default_locale": "en",
 
@@ -29,7 +30,6 @@
   },
   "commands": {
     "_execute_browser_action": {
-
       "suggested_key": {
         "default": "Ctrl+B",
         "windows": "Ctrl+B",
@@ -40,9 +40,5 @@
     }
   },
 
-  "permissions": [
-    "bookmarks",
-    "tabs",
-    "contextMenus"
-  ]
+  "permissions": ["bookmarks", "tabs", "contextMenus"]
 }
