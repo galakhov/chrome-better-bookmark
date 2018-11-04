@@ -41,24 +41,111 @@ function setFullPathRecursively(el, node, titles) {
   });
 }
 
-function createUiElement(node) {
+function createUiElement(node, captions = true) {
   var el = document.createElement("div");
   el.setAttribute("data-id", node.id);
   el.setAttribute("data-count", node.children.length);
   el.setAttribute("data-title", node.title);
   el.setAttribute("data-parent-id", node.parentId);
   el.classList.add("bookmark");
-  var getParentNode = chrome.bookmarks.get(node.parentId, function(parentNode) {
-    if (parentNode[0] && parentNode[0].parentId > 0) {
-      setFullPathRecursively(el, node, []);
-    }
-  });
+  if (captions) {
+    var getParentNode = chrome.bookmarks.get(node.parentId, function(
+      parentNode
+    ) {
+      if (parentNode[0] && parentNode[0].parentId > 0) {
+        setFullPathRecursively(el, node, []);
+      }
+    });
+  }
   // TODO: get position of the tooltip from the extension options and pass it over here
   el.setAttribute("data-tooltip-position", "bottom"); // position of the tooltip
   el.innerHTML = "<span class='bookmark__title'>" + node.title + "</span>";
   el = appendRadioButtonParentSelector(el, node.parentId);
-
   return el;
+}
+
+function showFullPathOfParentDir(parentSelected) {
+  if (parentSelected != null) {
+    var dirName = parentSelected.getAttribute("data-tooltip");
+    if (dirName != null) {
+      dirName += " > ";
+    } else {
+      dirName = "";
+    }
+    dirName += parentSelected.getElementsByTagName("span")[0].textContent;
+
+    var output = document.querySelector(".bookmark__parent-output header");
+    if (output != null) {
+      output.innerHTML =
+        "<p><strong>" + chrome.i18n.getMessage("parentdir") + ":</strong></p>";
+      output.innerHTML += "<p>" + dirName + "</p>";
+      if (!output.parentNode.classList.contains("visible")) {
+        output.parentNode.classList.add("visible");
+      }
+      var hiddenInput = document.querySelector(".bookmark__parent-hidden");
+      hiddenInput.setAttribute("value", parentSelected.getAttribute("data-id"));
+    }
+  }
+}
+
+function showTreeOfSelectedNode(parentNodeId) {
+  chrome.bookmarks.getSubTree(parentNodeId, drawTree);
+}
+
+function getDirectoriesInChildren(categoryNodes) {
+  return filterRecursively(categoryNodes, "children", function(node) {
+    return !node.url && node.id > 0;
+  });
+}
+
+function drawTree(categoryNodes) {
+  if (categoryNodes[0] && categoryNodes[0].children.length > 0) {
+    var footer = document.querySelector(".bookmark__parent-output footer");
+    while (footer.firstChild) {
+      // remove the previously generated tree first
+      footer.removeChild(footer.firstChild);
+    }
+    footer.removeEventListener("click", handleAddBookmark);
+
+    var categoryChildren = getDirectoriesInChildren(categoryNodes[0].children);
+    var elementsWithUi = [];
+    categoryChildren.forEach(function(node) {
+      elementsWithUi.push(createUiElement(node, false));
+    });
+
+    if (categoryChildren.length > 0) {
+      // if there are children: i.e. subdirectories
+      var footerUl = document.createElement("ul");
+      var rootNodeId = categoryNodes[0].id;
+      var secondParent, currentNodeParentId, newEl, firstLevel;
+      secondParent = rootNodeId;
+      elementsWithUi.forEach(function(element) {
+        // make a tree
+        currentNodeParentId = element.getAttribute("data-parent-id");
+        if (currentNodeParentId !== rootNodeId) {
+          var footerUlLi = document.createElement("li");
+          if (currentNodeParentId === secondParent && firstLevel === true) {
+            // append another element (indented of two levels)
+            newEl = document.createElement("i");
+            newEl.innerHTML = "&nbsp;&nbsp;&nbsp;&#8627;";
+            element.insertBefore(newEl, element.firstChild);
+          } else {
+            firstLevel = true;
+            secondParent = element.getAttribute("data-id");
+          }
+          // append a list element (indented of one level)
+          footerUlLi.appendChild(element);
+          footerUl.appendChild(footerUlLi);
+        } else {
+          // append a root element without a list wrapper
+          footerUl.appendChild(element);
+          firstLevel = false;
+        }
+      });
+      footer.appendChild(footerUl);
+      footer.addEventListener("click", handleAddBookmark);
+    }
+  }
 }
 
 function appendRadioButtonParentSelector(el, parentId) {
@@ -70,36 +157,16 @@ function appendRadioButtonParentSelector(el, parentId) {
   // if radio button was clicked grab the value of the parent and pass it over
   theInput.addEventListener("click", function(e) {
     var parentSelected = this.parentNode;
-    if (parentSelected != null) {
-      var dirName = parentSelected.getAttribute("data-tooltip");
-      if (dirName != null) {
-        dirName += " > ";
-      } else {
-        dirName = "";
-      }
-      dirName += parentSelected.getElementsByTagName("span")[0].textContent;
-
-      var output = document.querySelector(".bookmark__parent-output header");
-      if (output != null) {
-        output.innerHTML =
-          "<p><strong>" +
-          chrome.i18n.getMessage("parentdir") +
-          ":</strong></p>";
-        output.innerHTML += "<p>" + dirName + "</p>";
-        if (!output.parentNode.classList.contains("visible")) {
-          output.parentNode.classList.add("visible");
-        }
-        var hiddenInput = document.querySelector(".bookmark__parent-hidden");
-        hiddenInput.setAttribute(
-          "value",
-          parentSelected.getAttribute("data-id")
-        );
-      }
-    }
+    showFullPathOfParentDir(parentSelected);
+    showTreeOfSelectedNode(parentSelected.getAttribute("data-id"));
   });
   el.appendChild(theInput);
 
   return el;
+}
+
+function handleAddBookmark(e) {
+  triggerClick(e.target);
 }
 
 function triggerClick(element) {
@@ -205,6 +272,8 @@ function addHiddenOutput() {
   input.setAttribute("name", "parentid");
   input.setAttribute("class", "bookmark__parent-hidden");
   output.appendChild(input);
+  var footer = document.createElement("footer");
+  output.appendChild(footer);
 
   return output;
 }
@@ -242,9 +311,7 @@ function createInitialTree() {
     var hiddenOutput = addHiddenOutput();
     wrapper.parentNode.insertBefore(hiddenOutput, wrapper);
 
-    wrapper.addEventListener("click", function(e) {
-      triggerClick(e.target);
-    });
+    wrapper.addEventListener("click", handleAddBookmark);
   });
 }
 
