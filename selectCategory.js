@@ -89,7 +89,9 @@ function showFullPathOfParentDir(parentSelected) {
 }
 
 function showTreeOfSelectedNode(parentNodeId) {
-  chrome.bookmarks.getSubTree(parentNodeId, drawTree);
+  if (parentNodeId) {
+    chrome.bookmarks.getSubTree(parentNodeId, drawTree);
+  }
 }
 
 function getDirectoriesInChildren(categoryNodes) {
