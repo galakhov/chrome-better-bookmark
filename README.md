@@ -5,7 +5,7 @@
 - Another new feature helps you to get a quick overview of child folders (to see the sub tree) in a chosen directory.
 - Fuse.js library updated to v3.3.0 and max amount of characters for the search pattern is set to 150, therefore, "Pattern length is too long" error shouldn't now block the search (or bitapRegexSearch will be used instead).
 
-<p align="center"><img src="https://res.cloudinary.com/rootless/image/upload/s--ftWzVCaP--/c_scale,q_jpegmini,w_500/v1542034492/public/chrome-better-bookmark-new.png" title="New Better Bookmark" alt="New Better Bookmark"></p>
+<p align="center"><img width="320" src="https://res.cloudinary.com/rootless/image/upload/c_scale,q_100,w_800/v1542035177/public/chrome-better-bookmark-new.png" title="New Better Bookmark" alt="New Better Bookmark"></p>
 
 # chrome-better-bookmark
 
