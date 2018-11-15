@@ -1,14 +1,30 @@
 {
-    "new": {
-        "message": "add new directory in that parent &#8599;",
-        "description": "New category text"
-    },
-    "caption": {
-        "message": "Creates new directory in a chosen parent directory from the list above",
-        "description": "Caption to show on mouse over"
-    },
-    "parentdir": {
-        "message": "This parent directory is chosen",
-        "description": "Chosen parent directory"
-    }
+  "new": {
+    "message":
+      "Look for a folder by entering its <b>name</b> above.<br />Not found? Type in the desired <b>name</b> and click on it below to create a new folder.",
+    "description": "New category text"
+  },
+  "chooseparent": {
+    "message":
+      "By clicking on any radio button from below you place <b>your new folder</b> to a chosen one",
+    "description": "Choose parent category text"
+  },
+  "iconup": {
+    "message": "&uparrow;",
+    "description": "Parent category icon up"
+  },
+  "icondown": {
+    "message": "&downarrow;",
+    "description": "Parent category icon down"
+  },
+  "caption": {
+    "message":
+      "Create new directory in a chosen parent directory from the list below",
+    "description": "Caption to show on mouse over"
+  },
+  "anotherparentdir": {
+    "message":
+      "You can now save to any listed sub folder if its name is more appropriate or make it to a parent",
+    "description": "Chosen parent directory"
+  }
 }

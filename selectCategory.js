@@ -3,6 +3,7 @@ var wrapper;
 var focusedElement;
 var fuzzySearch;
 var currentNodeCount = 0;
+var parentClicked = false;
 
 var DOWN_KEYCODE = 40;
 var UP_KEYCODE = 38;
@@ -76,9 +77,15 @@ function showFullPathOfParentDir(parentSelected) {
 
     var output = document.querySelector(".bookmark__parent-output header");
     if (output != null) {
+      // TODO: change parent directory by clicking on one dir in a breadcrumb
       output.innerHTML =
-        "<p><strong>" + chrome.i18n.getMessage("parentdir") + ":</strong></p>";
-      output.innerHTML += "<p>" + dirName + "</p>";
+        "<p class='bookmark__parent-chosen'><b>" +
+        dirName +
+        "</b></p><aside class='bookmark__parent-create-icon'>" +
+        chrome.i18n.getMessage("icondown") +
+        "</aside><p class='bookmark__parent-text'>" +
+        chrome.i18n.getMessage("anotherparentdir") +
+        "</p>";
       if (!output.parentNode.classList.contains("visible")) {
         output.parentNode.classList.add("visible");
       }
@@ -158,6 +165,7 @@ function appendRadioButtonParentSelector(el, parentId) {
   theInput.setAttribute("value", parentId);
   // if radio button was clicked grab the value of the parent and pass it over
   theInput.addEventListener("click", function(e) {
+    parentClicked = true;
     var parentSelected = this.parentNode;
     showFullPathOfParentDir(parentSelected);
     showTreeOfSelectedNode(parentSelected.getAttribute("data-id"));
@@ -173,8 +181,13 @@ function handleAddBookmark(e) {
 
 function triggerClick(element) {
   if (element.nodeName.toLowerCase() === "span") {
+    // clicked on .bookmark__parent-create-dir-name span
     element = element.parentNode;
   }
+  // else if (element.nodeName.toLowerCase() === "p") {
+  //   // clicked on p.bookmark__parent-create-dir-name
+  //   element = element.parentNode;
+  // }
 
   var categoryId = element.getAttribute("data-id");
   var newCategoryTitle;
@@ -235,6 +248,17 @@ function createUiFromNodes(categoryNodes) {
 }
 
 function resetUi() {
+  var newDirInputWrapper = document.querySelector(
+    ".bookmark__parent-create-wrapper"
+  );
+  var newDirInput = newDirInputWrapper.querySelector(
+    ".bookmark__parent-create"
+  );
+  if (newDirInput) {
+    // remove existing input field before the next update (see addCreateCategoryButton)
+    newDirInputWrapper.removeChild(newDirInput);
+  }
+  // update the folders in the whole tree according to the entered search string
   wrapper.innerHTML = "";
 }
 
@@ -248,18 +272,17 @@ function focusItem(index) {
 }
 
 function addCreateCategoryButton(categoryName) {
+  // TODO: create options
+  // TODO: parse the position of the tooltip from extension's options
   var el = document.createElement("div");
   el.setAttribute("data-id", "NEW");
   el.setAttribute("data-title", categoryName);
-  // TODO: create options
-  // TODO: parse the position of the tooltip from extension's options
   el.setAttribute("data-tooltip-position", "bottom"); // set position of the tooltip
-  el.classList.add("create");
+  el.classList.add("bookmark__parent-create");
   el.setAttribute("data-tooltip", chrome.i18n.getMessage("caption"));
   el.innerHTML =
-    "<span>" + chrome.i18n.getMessage("new") + ": " + categoryName + "</span>";
-
-  wrapper.appendChild(el);
+    "<span class='bookmark__parent-create-dir-name'>" + categoryName + "</p>";
+  document.querySelector(".bookmark__parent-create-wrapper").appendChild(el);
   currentNodeCount = currentNodeCount + 1;
 }
 
@@ -278,6 +301,42 @@ function addHiddenOutput() {
   output.appendChild(footer);
 
   return output;
+}
+
+function addNewDirectoryTextAbove() {
+  var newDirWrapperCaptionsAbove = document.createElement("div");
+  newDirWrapperCaptionsAbove.setAttribute(
+    "class",
+    "bookmark__parent-create-wrapper-desc"
+  );
+  newDirWrapperCaptionsAbove.innerHTML =
+    "<aside class='bookmark__parent-create-icon'>" +
+    chrome.i18n.getMessage("iconup") +
+    "</aside><p>" +
+    chrome.i18n.getMessage("new") +
+    "</p>";
+  return newDirWrapperCaptionsAbove;
+}
+
+function addNewDirectoryTextBelow() {
+  var newDirWrapperCaptionsBelow = document.createElement("div");
+  newDirWrapperCaptionsBelow.setAttribute(
+    "class",
+    "bookmark__parent-create-wrapper-desc"
+  );
+  newDirWrapperCaptionsBelow.innerHTML =
+    "<aside class='bookmark__parent-create-icon icon-right'>" +
+    chrome.i18n.getMessage("icondown") +
+    "</aside><p class='bookmark__parent-create-dir-caption'>" +
+    chrome.i18n.getMessage("chooseparent") +
+    "</p>";
+  return newDirWrapperCaptionsBelow;
+}
+
+function addNewDirectoryClickableWrapper() {
+  var newDirWrapper = document.createElement("div");
+  newDirWrapper.setAttribute("class", "bookmark__parent-create-wrapper");
+  return newDirWrapper;
 }
 
 function createInitialTree() {
@@ -310,10 +369,18 @@ function createInitialTree() {
 
     fuzzySearch = new Fuse(categoryNodes, options);
 
+    var newDirWrapperAbove = addNewDirectoryTextAbove();
+    wrapper.parentNode.insertBefore(newDirWrapperAbove, wrapper);
+    var newDirInputWrapper = addNewDirectoryClickableWrapper();
+    wrapper.parentNode.insertBefore(newDirInputWrapper, wrapper);
+    var newDirWrapperBelow = addNewDirectoryTextBelow();
+    wrapper.parentNode.insertBefore(newDirWrapperBelow, wrapper);
     var hiddenOutput = addHiddenOutput();
     wrapper.parentNode.insertBefore(hiddenOutput, wrapper);
-
+    // Add bookmarks' clicks for the tree
     wrapper.addEventListener("click", handleAddBookmark);
+    // Add a bookmarks' click to the bookmark__parent-create-wrapper
+    newDirInputWrapper.addEventListener("click", handleAddBookmark);
   });
 }
 
@@ -353,7 +420,7 @@ function createInitialTree() {
           resetUi();
           createUiFromNodes(newNodes);
 
-          if (newNodes.length) {
+          if (newNodes.length && parentClicked === false) {
             focusItem(0);
           }
 
