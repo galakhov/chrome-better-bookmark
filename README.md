@@ -6,6 +6,8 @@
 - UI has been improved a bit. Icons, breadcrumb and descriptions were added, input fields and text blocks were moved to key positions.
 - Fuse.js library updated to v3.3.0 and max amount of characters for the search pattern is set to 150, therefore, "Pattern length is too long" error shouldn't now block the search (or bitapRegexSearch will be used instead).
 
+<p align="center"><img width="320" src="https://res.cloudinary.com/rootless/image/upload/c_scale,q_100,w_800/v1542035177/public/chrome-better-bookmark-new.png" title="New Better Bookmark" alt="New Better Bookmark"></p>
+
 # chrome-better-bookmark
 
 Chrome Extension that lets you easily add bookmarks to any category. Includes spotlight-like weighted search (http://fusejs.io) with mouse/keyboard support.
