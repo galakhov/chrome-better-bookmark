@@ -1,12 +1,12 @@
 {
   "new": {
     "message":
-      "Look for a folder by entering its <b>name</b> above.<br />Not found? Type in the desired <b>name</b> and click on it below to create a new folder.",
+      "Look for a folder by entering its <b>name</b> above first.<br />Not found? Type in the desired <b>name</b> and click on it below to create a new folder.",
     "description": "New category text"
   },
   "chooseparent": {
     "message":
-      "By clicking on any radio button from below you place <b>your new folder</b> to a chosen one",
+      "You can also link <b>your new folder</b> to a chosen parent by clicking on any radio button",
     "description": "Choose parent category text"
   },
   "iconup": {
@@ -24,7 +24,7 @@
   },
   "anotherparentdir": {
     "message":
-      "You can now save to any listed sub folder if its name is more appropriate or make it to a parent",
+      "You can now click on any listed sub folder to save a bookmark or choose it as a parent again",
     "description": "Chosen parent directory"
   }
 }
