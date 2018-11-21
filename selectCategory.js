@@ -245,7 +245,7 @@ function splitString(originalString, separator) {
 
 function generateTreeOfSelectedNode(nodeId) {
   if (nodeId) {
-    chrome.bookmarks.getSubTree(nodeId, drawTree);
+    chrome.bookmarks.getSubTree(nodeId, drawSubTree);
   }
 }
 
@@ -255,7 +255,7 @@ function getDirectoriesInChildren(categoryNodes) {
   });
 }
 
-function drawTree(categoryNodes) {
+function drawSubTree(categoryNodes) {
   if (categoryNodes[0] && categoryNodes[0].children.length > 0) {
     var outputSection = document.querySelector(".bookmarks__parents-output");
     var footer = document.querySelector(".bookmarks__parents-output footer");
@@ -288,7 +288,11 @@ function drawTree(categoryNodes) {
       // if there are children: i.e. subdirectories
       var footerUl = document.createElement("ul");
       var rootNodeId = categoryNodes[0].id;
-      var secondParent, currentNodeParentId, newEl, firstLevel;
+      var secondParent,
+        currentNodeParentId,
+        newEl,
+        firstLevel,
+        secondlevelEntered = false;
       secondParent = rootNodeId;
       elementsWithUi.forEach(function(element) {
         // make a tree
@@ -296,14 +300,16 @@ function drawTree(categoryNodes) {
         if (currentNodeParentId !== rootNodeId) {
           var footerUlLi = document.createElement("li");
           if (currentNodeParentId === secondParent && firstLevel === true) {
-            // append another element (indented of two levels)
-            // newEl = document.createElement("i");
-            newEl = document.createElement("mark");
-            newEl.innerHTML = "<i>&#8627;</i>";
-            // element.insertBefore(newEl, element.firstChild);
-            element.insertBefore(newEl, element.firstChild);
+            // style element differently (indented of two levels)
+            if (!secondlevelEntered) {
+              element.classList.add("bookmark--second-level");
+              secondlevelEntered = true;
+            } else {
+              element.classList.add("bookmark--second-level-indentation");
+            }
           } else {
             firstLevel = true;
+            secondlevelEntered = false;
             secondParent = element.getAttribute("data-id");
           }
           // append a list element (indented of one level)
@@ -315,11 +321,12 @@ function drawTree(categoryNodes) {
           firstLevel = false;
         }
       });
+      // render the sub tree
       footer.appendChild(footerUl);
       footer.innerHTML += tooltip;
       // add events for all bookmarks
       footer.addEventListener("click", handleAddBookmark);
-      // add events for all radio buttons
+      // add events for all radio buttons (parent selectors)
       footer.addEventListener("click", handleRadioButtons);
     } else {
       if (outputSection.classList.contains("with-children")) {
@@ -341,13 +348,17 @@ function appendRadioButtonParentSelector(el, parentId) {
 
 function handleRadioButtons(el) {
   var parentSelected = el.target.parentNode;
-  if (el.target.closest(".bookmarks__parents-output-footer")) {
-    // TODO: If we're in the Tree.
-    showFullPathOfParentDir(parentSelected, " > ");
+  var footerWrapper = el.target.closest(".bookmarks__parents-output-footer");
+  if (footerWrapper) {
+    // TODO: If we're in the sub tree
+    if (!footerWrapper.classList.contains("sub-tree")) {
+      footerWrapper.classList.add("sub-tree");
+    }
+    //:not(> )
   } else {
     parentClicked = true; // for focusing
-    showFullPathOfParentDir(parentSelected, " > ");
   }
+  showFullPathOfParentDir(parentSelected, " > ");
   generateTreeOfSelectedNode(parentSelected.getAttribute("data-id"));
 }
 

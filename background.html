@@ -241,7 +241,7 @@
   .bookmarks__parents-output-footer li div mark i {
     position: absolute;
     top: -6px;
-    left: 27.5px;
+    left: 26.5px;
     margin-left: 0;
     font-style: normal;
     float: left;
@@ -252,7 +252,7 @@
     left: 22px;
   }
 
-  .bookmarks__parents-output footer {
+  .bookmarks__parents-output-footer {
     margin-bottom: 10px;
   }
 
@@ -261,7 +261,7 @@
     display: inline-block;
   }
 
-  .bookmarks__parents-output footer .bookmarks__parents-id-selector {
+  .bookmarks__parents-output-footer .bookmarks__parents-id-selector {
     left: 22.5px;
     position: absolute;
     margin-top: 10px;
@@ -269,7 +269,7 @@
     width: 12px;
   }
 
-  .bookmarks__parents-output footer .bookmarks__title {
+  .bookmarks__parents-output-footer .bookmarks__title {
     margin-left: 5px;
     padding: 2px 6px 2px 12px;
     float: right;
@@ -277,21 +277,61 @@
     line-height: 31px;
   }
 
-  .bookmarks__parents-output footer li .bookmarks__title {
+  .bookmarks__parents-output-footer li .bookmarks__title {
     width: 94%;
     line-height: 34px;
     padding-left: 8px;
   }
 
-  .bookmarks__parents-output footer ul {
+  .bookmarks__parents-output-footer ul {
     list-style-type: none;
     margin-left: 12px;
     padding-left: 0px;
     margin-top: 11px;
   }
 
-  .bookmarks__parents-output footer ul li {
-    margin-left: 24px;
+  .bookmarks__parents-output-footer ul li {
+    margin-left: 31px;
+  }
+
+  /* .bookmarks__parents-output-footer ul div {
+    background: url('images/pipe.gif') no-repeat 32px 100%;
+  } */
+
+  .bookmarks__parents-output-footer ul div + div,
+  .bookmarks__parents-output-footer ul li > div {
+    background: none;
+  }
+
+  /* sub tree styles */
+  .bookmarks__parents-output-footer.sub-tree ul div,
+  .bookmarks__parents-output-footer.sub-tree ul li div {
+    background: none;
+  }
+
+  .bookmarks__parents-output-footer ul div + li > div,
+  .bookmarks__parents-output-footer.sub-tree ul li:first-of-type div,
+  .bookmarks__parents-output-footer.sub-tree ul div + li div,
+  .bookmarks__parents-output-footer.sub-tree ul div + li > div {
+    background: url('images/pipe.gif') no-repeat 0 0;
+  }
+
+  .bookmarks__parents-output-footer .bookmark--second-level,
+  .bookmarks__parents-output-footer.sub-tree ul li .bookmark--second-level {
+    background: url(images/pipe.gif) no-repeat 32px 0;
+    margin-left: -4px;
+  }
+
+  .bookmarks__parents-output-footer .bookmark--second-level span,
+  .bookmarks__parents-output-footer .bookmark--second-level-indentation span,
+  .bookmarks__parents-output-footer.sub-tree ul li .bookmark--second-level span {
+    display: block;
+    left: 32px;
+    position: relative;
+  }
+
+  .bookmarks__parents-output-footer .bookmark--second-level-indentation span {
+    left: 28px;
   }
 
   /* thanks to: https://stackoverflow.com/questions/1055581/how-do-i-add */
