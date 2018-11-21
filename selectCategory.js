@@ -9,6 +9,19 @@ var DOWN_KEYCODE = 40;
 var UP_KEYCODE = 38;
 var CONFIRM_KEYCODE = 13;
 
+chrome.windows.getCurrent(function(wind) {
+  var maxWidth = window.screen.availWidth;
+  var maxHeight = window.screen.availHeight;
+  var updateInfo = {
+    left: 0,
+    top: 0,
+    width: maxWidth,
+    height: maxHeight
+  };
+  console.log(wind);
+  // chrome.windows.update(wind.id, updateInfo);
+});
+
 function filterRecursively(nodeArray, childrenProperty, filterFn, results) {
   results = results || [];
 
@@ -348,7 +361,7 @@ function createInitialTree() {
       threshold: 0.4,
       location: 0,
       distance: 100,
-      maxPatternLength: 150,
+      maxPatternLength: 33,
       minMatchCharLength: 2,
       keys: ["title"]
     };

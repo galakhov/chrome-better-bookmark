@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "Better Bookmark",
+  "name": "Tree Bookmarks",
   "description":
     "Easily add bookmarks to any category. Includes spotlight-like search with mouse/keyboard support. Default key: cmd+b (win:ctrl+b)",
   "version": "1.5.0",
@@ -15,17 +15,17 @@
   },
 
   "icons": {
-    "16": "bookmark.png",
-    "48": "bookmark.png",
-    "128": "bookmark.png"
+    "16": "bookmark-icon-trees.png",
+    "48": "bookmark-icon-trees.png",
+    "128": "bookmark-icon-trees.png"
   },
 
   "browser_action": {
     "default_icon": {
-      "19": "bookmark.png",
-      "38": "bookmark.png"
+      "19": "bookmark-icon-trees.png",
+      "38": "bookmark-icon-trees.png"
     },
-    "default_title": "Better Bookmark Button",
+    "default_title": "Tree Bookmarks",
     "default_popup": "background.html"
   },
   "commands": {

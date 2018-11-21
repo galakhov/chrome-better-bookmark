@@ -24,7 +24,7 @@
   },
   "anotherparentdir": {
     "message":
-      "You can now click on any listed sub folder to save a bookmark or choose it as a parent again",
+      "You can now as well click on any listed sub folder to save your bookmark or makr it a parent folder",
     "description": "Chosen parent directory"
   }
 }
