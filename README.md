@@ -1,6 +1,6 @@
 ## Tree Bookmarks
 
-# This fork of [https://github.com/ardcore/chrome-better-bookmark]("Better Bookmark") is heavily optimised for people who likes the hierarchical folders' structure in their bookmarks and want to stick to it having tons of (organised) folders.
+# This fork of <a href="https://github.com/ardcore/chrome-better-bookmark">"Better Bookmark"</a> is heavily optimised for people who likes the hierarchical folders' structure in their bookmarks and want to stick to it having tons of (organised) folders.
 
 - Better Bookmark has been renamed to "Tree Bookmarks" and get a new icon from now on.
 - The redesign has happened.
