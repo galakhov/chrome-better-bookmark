@@ -1,5 +1,6 @@
 var categoryNodes = [];
 var wrapper;
+var searchWrapper;
 var focusedElement;
 var fuzzySearch;
 var currentNodeCount = 0;
@@ -9,18 +10,18 @@ var DOWN_KEYCODE = 40;
 var UP_KEYCODE = 38;
 var CONFIRM_KEYCODE = 13;
 
-chrome.windows.getCurrent(function(wind) {
-  var maxWidth = window.screen.availWidth;
-  var maxHeight = window.screen.availHeight;
-  var updateInfo = {
-    left: 0,
-    top: 0,
-    width: maxWidth,
-    height: maxHeight
-  };
-  console.log(wind);
-  // chrome.windows.update(wind.id, updateInfo);
-});
+// chrome.windows.getCurrent(function(wind) {
+//   var maxWidth = window.screen.availWidth;
+//   var maxHeight = window.screen.availHeight;
+//   var updateInfo = {
+//     left: 0,
+//     top: 0,
+//     width: maxWidth,
+//     height: maxHeight
+//   };
+//   console.log(wind);
+//   //// chrome.windows.update(wind.id, updateInfo);
+// });
 
 function filterRecursively(nodeArray, childrenProperty, filterFn, results) {
   results = results || [];
@@ -37,22 +38,24 @@ function filterRecursively(nodeArray, childrenProperty, filterFn, results) {
   return results;
 }
 
-function setFullPathRecursively(el, node, titles) {
+function getFullPathRecursively(el, node, titles) {
   var currentNode = node;
 
-  var getParentNode = chrome.bookmarks.get(currentNode.parentId, function(
-    parentNode
-  ) {
-    if (parentNode[0] && parentNode[0].parentId > 0) {
-      titles.unshift(parentNode[0].title);
-      currentNode = parentNode[0];
-      setFullPathRecursively(el, currentNode, titles);
-    } else {
-      setTimeout(function() {
-        el.setAttribute("data-tooltip", titles.join(" > "));
-      }, 0);
-    }
-  });
+  if (currentNode) {
+    var getParentNode = chrome.bookmarks.get(currentNode.parentId, function(
+      parentNode
+    ) {
+      if (parentNode[0] && parentNode[0].parentId > 0) {
+        titles.unshift(parentNode[0].title);
+        currentNode = parentNode[0];
+        getFullPathRecursively(el, currentNode, titles);
+      } else {
+        setTimeout(function() {
+          el.setAttribute("data-tooltip", titles.join(" > "));
+        }, 0);
+      }
+    });
+  }
 }
 
 function createUiElement(node, captions = true) {
@@ -67,50 +70,184 @@ function createUiElement(node, captions = true) {
       parentNode
     ) {
       if (parentNode[0] && parentNode[0].parentId > 0) {
-        setFullPathRecursively(el, node, []);
+        getFullPathRecursively(el, node, []);
       }
     });
   }
   // TODO: get position of the tooltip from the extension options and pass it over here
   el.setAttribute("data-tooltip-position", "bottom"); // position of the tooltip
-  el.innerHTML = "<span class='bookmark__title'>" + node.title + "</span>";
+  el.innerHTML = "<span class='bookmarks__title'>" + node.title + "</span>";
   el = appendRadioButtonParentSelector(el, node.parentId);
   return el;
 }
 
-function showFullPathOfParentDir(parentSelected) {
-  if (parentSelected != null) {
-    var dirName = parentSelected.getAttribute("data-tooltip");
-    if (dirName != null) {
-      dirName += " > ";
-    } else {
-      dirName = "";
-    }
-    dirName += parentSelected.getElementsByTagName("span")[0].textContent;
-
-    var output = document.querySelector(".bookmark__parent-output header");
-    if (output != null) {
-      // TODO: change parent directory by clicking on one dir in a breadcrumb
-      output.innerHTML =
-        "<p class='bookmark__parent-chosen'><b>" +
-        dirName +
-        "</b></p><aside class='bookmark__parent-create-icon'>" +
-        chrome.i18n.getMessage("icondown") +
-        "</aside><p class='bookmark__parent-text'>" +
-        chrome.i18n.getMessage("anotherparentdir") +
-        "</p>";
-      if (!output.parentNode.classList.contains("visible")) {
-        output.parentNode.classList.add("visible");
+function getBreadcrumbByStartingNode(el, node, links) {
+  var currentNode = node;
+  var getParentNode = chrome.bookmarks.get(currentNode.parentId, function(
+    parentNode
+  ) {
+    if (currentNode && parentNode[0] && parentNode[0].parentId > 0) {
+      if (links.length <= 0) {
+        links.unshift(currentNode);
       }
-      var hiddenInput = document.querySelector(".bookmark__parent-hidden");
-      hiddenInput.setAttribute("value", parentSelected.getAttribute("data-id"));
+      links.unshift(parentNode[0]);
+      currentNode = parentNode[0];
+      getBreadcrumbByStartingNode(el, currentNode, links);
+    } else {
+      // on click on the root node, which is already saved in "currentNode"
+      if (links.length <= 1) {
+        links.unshift(currentNode);
+      }
+      setTimeout(function() {
+        for (var i = 0; i < links.length; i++) {
+          links[i] =
+            "<a class='breadcrumb__link' data-id-link='" +
+            links[i].id +
+            "'>" +
+            links[i].title +
+            "</a>";
+        }
+        if (el.firstChild) {
+          el.removeChild(el.firstChild);
+        }
+        el.innerHTML =
+          "<p class='bookmarks__parent-chosen'><b>" +
+          links.join(" > ") +
+          "</b></p>";
+
+        // generate links for all breadcumb's nodes
+        var createdBreadcrumb = document.querySelector(
+          ".bookmarks__parent-chosen"
+        );
+        if (createdBreadcrumb) {
+          createdBreadcrumb.addEventListener("click", handleBreadcrumbLink);
+        }
+      }, 0);
     }
+  });
+}
+
+function showFullPathOfParentDir(parentSelected, breadcrumbSeparator = "") {
+  if (parentSelected === null) {
+    return;
+  }
+
+  var dirName = parentSelected.getAttribute("data-title");
+  var dirId = parentSelected.getAttribute("data-id");
+
+  var outputFooter = document.querySelector(".bookmarks__parents-output");
+  if (!outputFooter.classList.contains("visible")) {
+    outputFooter.classList.add("visible");
+  }
+
+  var output = document.querySelector(".bookmarks__breadcrumb");
+  if (output !== null) {
+    if (breadcrumbSeparator) {
+      // remove old event listeners, as the breadcumb will be rerendered
+      var linksInOutput = document.querySelector(".bookmarks__parent-chosen");
+      if (linksInOutput) {
+        linksInOutput.removeEventListener("click", handleBreadcrumbLink);
+      }
+      var getParentNode = chrome.bookmarks.get(dirId, function(parentNode) {
+        if (parentNode[0] && parentNode[0].parentId > 0) {
+          getBreadcrumbByStartingNode(output, parentNode[0], []);
+        } else {
+          console.log("xey3Bo");
+          output.innerHTML =
+            "<p class='bookmarks__parent-chosen'><b>" + dirName + "</b></p>";
+          // just rerender the tree with children
+          generateTreeOfSelectedNode(dirId);
+        }
+      });
+    } else {
+      output.innerHTML =
+        "<p class='bookmarks__parent-chosen'><b>" + dirName + "</b></p>";
+    }
+    // set value of the currently clicked radio button to the hidden input
+    var hiddenInput = document.querySelector(".bookmarks__parents-hidden");
+    hiddenInput.setAttribute("value", parentSelected.getAttribute("data-id"));
   }
 }
 
-function showTreeOfSelectedNode(parentNodeId) {
-  if (parentNodeId) {
-    chrome.bookmarks.getSubTree(parentNodeId, drawTree);
+function handleBreadcrumbLink(el) {
+  if (event.target.nodeName.toLowerCase() !== "a") {
+    return;
+  }
+  // switch tree (parent) to the clicked breadcumb
+  var nodeId = event.target.getAttribute("data-id-link");
+  console.log("nodeId", nodeId);
+  var output = document.querySelector(".bookmarks__breadcrumb");
+
+  // remove old event listeners, as the breadcumb will be rerendered
+  var linksInOutput = document.querySelector(".bookmarks__parent-chosen");
+  if (linksInOutput) {
+    linksInOutput.removeEventListener("click", handleBreadcrumbLink);
+  }
+
+  // rerender the breadcumb itself
+  if (nodeId && nodeId > 0) {
+    var getParentNode = chrome.bookmarks.get(nodeId, function(parentNode) {
+      if (parentNode[0] && parentNode[0].parentId > 0) {
+        getBreadcrumbByStartingNode(output, parentNode[0], []);
+      }
+    });
+  }
+
+  // rerender the tree with children
+  generateTreeOfSelectedNode(nodeId);
+
+  /* // add breadcumb point to the search field to filter the results displayed below
+    var searchInput = document.querySelector(".spotligh-search input");
+    searchInput.value = event.target.textContent;
+    searchInput.focus();
+    __triggerKeyboardEvent(searchInput, 8);
+
+    var foundFolders = document.querySelectorAll("#wrapper .bookmarks__title");
+    var arrayOfFoundFolders = [];
+    for (
+      i = -1, l = foundFolders.length;
+      ++i !== l;
+      arrayOfFoundFolders[i] = foundFolders[i]
+    );
+    const filteredItems = query => {
+      return arrayOfFoundFolders.filter(
+        el => el.textContent.toLowerCase().indexOf(query.toLowerCase()) > -1
+      );
+    };
+  */
+}
+
+/*
+function __triggerKeyboardEvent(el, keyCode) {
+  var eventObj = document.createEventObject
+    ? document.createEventObject()
+    : document.createEvent("Events");
+
+  if (eventObj.initEvent) {
+    eventObj.initEvent("keydown", true, true);
+  }
+
+  eventObj.keyCode = keyCode;
+  eventObj.which = keyCode;
+
+  el.dispatchEvent
+    ? el.dispatchEvent(eventObj)
+    : el.fireEvent("onkeydown", eventObj);
+}
+*/
+
+function splitString(originalString, separator) {
+  var arrayOfStrings = originalString.split(separator);
+  for (var i = 0; i < arrayOfStrings.length; i++) {
+    arrayOfStrings[i] =
+      "<a class='breadcrumb__link'>" + arrayOfStrings[i] + "</a>";
+  }
+  return arrayOfStrings.join(" > ");
+}
+
+function generateTreeOfSelectedNode(nodeId) {
+  if (nodeId) {
+    chrome.bookmarks.getSubTree(nodeId, drawTree);
   }
 }
 
@@ -121,13 +258,16 @@ function getDirectoriesInChildren(categoryNodes) {
 }
 
 function drawTree(categoryNodes) {
+  console.log("NODE?", categoryNodes);
   if (categoryNodes[0] && categoryNodes[0].children.length > 0) {
-    var footer = document.querySelector(".bookmark__parent-output footer");
+    var outputSection = document.querySelector(".bookmarks__parents-output");
+    var footer = document.querySelector(".bookmarks__parents-output footer");
     while (footer.firstChild) {
       // remove the previously generated tree first
       footer.removeChild(footer.firstChild);
     }
     footer.removeEventListener("click", handleAddBookmark);
+    footer.removeEventListener("click", handleRadioButtons);
 
     var categoryChildren = getDirectoriesInChildren(categoryNodes[0].children);
     var elementsWithUi = [];
@@ -136,6 +276,18 @@ function drawTree(categoryNodes) {
     });
 
     if (categoryChildren.length > 0) {
+      // If there are children, add a class to a parent to avoid showing border
+      if (!outputSection.classList.contains("with-children")) {
+        outputSection.classList.add("with-children");
+      }
+      // Tooltip first
+      var tooltip =
+        "<aside class='bookmarks__parents-create-icon'>" +
+        chrome.i18n.getMessage("iconup") +
+        "</aside><p class='bookmarks__parents-text'>" +
+        chrome.i18n.getMessage("anotherparentdir") +
+        "</p>";
+
       // if there are children: i.e. subdirectories
       var footerUl = document.createElement("ul");
       var rootNodeId = categoryNodes[0].id;
@@ -148,8 +300,10 @@ function drawTree(categoryNodes) {
           var footerUlLi = document.createElement("li");
           if (currentNodeParentId === secondParent && firstLevel === true) {
             // append another element (indented of two levels)
-            newEl = document.createElement("i");
-            newEl.innerHTML = "&nbsp;&nbsp;&nbsp;&#8627;";
+            // newEl = document.createElement("i");
+            newEl = document.createElement("mark");
+            newEl.innerHTML = "<i>&#8627;</i>";
+            // element.insertBefore(newEl, element.firstChild);
             element.insertBefore(newEl, element.firstChild);
           } else {
             firstLevel = true;
@@ -165,7 +319,15 @@ function drawTree(categoryNodes) {
         }
       });
       footer.appendChild(footerUl);
+      footer.innerHTML += tooltip;
+      // add events for all bookmarks
       footer.addEventListener("click", handleAddBookmark);
+      // add events for all radio buttons
+      footer.addEventListener("click", handleRadioButtons);
+    } else {
+      if (outputSection.classList.contains("with-children")) {
+        outputSection.classList.remove("with-children");
+      }
     }
   }
 }
@@ -173,19 +335,32 @@ function drawTree(categoryNodes) {
 function appendRadioButtonParentSelector(el, parentId) {
   var theInput = document.createElement("input");
   theInput.setAttribute("type", "radio");
-  theInput.setAttribute("name", "parent-id");
-  theInput.setAttribute("class", "bookmark__parent-id-selector");
+  theInput.setAttribute("name", "parents-id");
+  theInput.setAttribute("class", "bookmarks__parents-id-selector");
   theInput.setAttribute("value", parentId);
-  // if radio button was clicked grab the value of the parent and pass it over
-  theInput.addEventListener("click", function(e) {
-    parentClicked = true;
-    var parentSelected = this.parentNode;
-    showFullPathOfParentDir(parentSelected);
-    showTreeOfSelectedNode(parentSelected.getAttribute("data-id"));
-  });
   el.appendChild(theInput);
-
   return el;
+}
+
+function handleRadioButtons(el) {
+  var parentSelected = el.target.parentNode;
+  if (el.target.closest(".bookmarks__parents-output-footer")) {
+    // if we're in the Tree
+    // TODO: get full path with links
+    // var chosenChildId = el.target.parentNode.getAttribute("data-id-link");
+    // var newChild = document.createElement("strong");
+    // newChild.setAttribute("class", "level-x");
+    // newChild.textContent = el.target.parentNode.getAttribute("data-title");
+    // var chosenChildId = el.target.parentNode.getAttribute("data-id");
+    // newChild.setAttribute("data-id", chosenChildId);
+
+    // console.log("this.parentNode", el.target.parentNode);
+    showFullPathOfParentDir(parentSelected, " > "); // " > " + newChild.textContent
+  } else {
+    parentClicked = true; // for focusing
+    showFullPathOfParentDir(parentSelected, " > ");
+  }
+  generateTreeOfSelectedNode(parentSelected.getAttribute("data-id"));
 }
 
 function handleAddBookmark(e) {
@@ -194,11 +369,11 @@ function handleAddBookmark(e) {
 
 function triggerClick(element) {
   if (element.nodeName.toLowerCase() === "span") {
-    // clicked on .bookmark__parent-create-dir-name span
+    // clicked on .bookmarks__parents-create-dir-name span
     element = element.parentNode;
   }
   // else if (element.nodeName.toLowerCase() === "p") {
-  //   // clicked on p.bookmark__parent-create-dir-name
+  //   // clicked on p.bookmarks__parents-create-dir-name
   //   element = element.parentNode;
   // }
 
@@ -208,7 +383,7 @@ function triggerClick(element) {
   if (categoryId == "NEW") {
     newCategoryTitle = element.getAttribute("data-title");
 
-    var checkedElId = document.querySelector(".bookmark__parent-hidden");
+    var checkedElId = document.querySelector(".bookmarks__parents-hidden");
     var selectedParentId = checkedElId.value != "" ? checkedElId.value : null;
     chrome.bookmarks.create(
       {
@@ -248,6 +423,7 @@ function getCurrentUrlData(callbackFn) {
 }
 
 function createUiFromNodes(categoryNodes) {
+  wrapper.removeEventListener("click", handleRadioButtons);
   var categoryUiElements = [];
   currentNodeCount = categoryNodes.length;
 
@@ -258,14 +434,16 @@ function createUiFromNodes(categoryNodes) {
   categoryUiElements.forEach(function(element) {
     wrapper.appendChild(element);
   });
+
+  wrapper.addEventListener("click", handleRadioButtons);
 }
 
 function resetUi() {
   var newDirInputWrapper = document.querySelector(
-    ".bookmark__parent-create-wrapper"
+    ".bookmarks__parents-create-wrapper"
   );
   var newDirInput = newDirInputWrapper.querySelector(
-    ".bookmark__parent-create"
+    ".bookmarks__parents-create"
   );
   if (newDirInput) {
     // remove existing input field before the next update (see addCreateCategoryButton)
@@ -291,26 +469,29 @@ function addCreateCategoryButton(categoryName) {
   el.setAttribute("data-id", "NEW");
   el.setAttribute("data-title", categoryName);
   el.setAttribute("data-tooltip-position", "bottom"); // set position of the tooltip
-  el.classList.add("bookmark__parent-create");
+  el.classList.add("bookmarks__parents-create");
   el.setAttribute("data-tooltip", chrome.i18n.getMessage("caption"));
   el.innerHTML =
-    "<span class='bookmark__parent-create-dir-name'>" + categoryName + "</p>";
-  document.querySelector(".bookmark__parent-create-wrapper").appendChild(el);
+    "<span class='bookmarks__parents-create-dir-name'>" + categoryName + "</p>";
+  document.querySelector(".bookmarks__parents-create-wrapper").appendChild(el);
   currentNodeCount = currentNodeCount + 1;
 }
 
 function addHiddenOutput() {
   // add hidden element to output a parent directory later
   var output = document.createElement("div");
-  output.setAttribute("class", "bookmark__parent-output");
-  var header = document.createElement("header");
-  output.appendChild(header);
+  output.setAttribute("class", "bookmarks__parents-output");
+  var breadcrumb = document.createElement("div");
+  breadcrumb.setAttribute("class", "bookmarks__breadcrumb");
+  searchWrapper.appendChild(breadcrumb);
+
   var input = document.createElement("input");
   input.setAttribute("type", "hidden");
   input.setAttribute("name", "parentid");
-  input.setAttribute("class", "bookmark__parent-hidden");
+  input.setAttribute("class", "bookmarks__parents-hidden");
   output.appendChild(input);
   var footer = document.createElement("footer");
+  footer.setAttribute("class", "bookmarks__parents-output-footer");
   output.appendChild(footer);
 
   return output;
@@ -320,10 +501,10 @@ function addNewDirectoryTextAbove() {
   var newDirWrapperCaptionsAbove = document.createElement("div");
   newDirWrapperCaptionsAbove.setAttribute(
     "class",
-    "bookmark__parent-create-wrapper-desc"
+    "bookmarks__parents-create-wrapper-desc-text"
   );
   newDirWrapperCaptionsAbove.innerHTML =
-    "<aside class='bookmark__parent-create-icon'>" +
+    "<aside class='bookmarks__parents-create-icon'>" +
     chrome.i18n.getMessage("iconup") +
     "</aside><p>" +
     chrome.i18n.getMessage("new") +
@@ -335,12 +516,12 @@ function addNewDirectoryTextBelow() {
   var newDirWrapperCaptionsBelow = document.createElement("div");
   newDirWrapperCaptionsBelow.setAttribute(
     "class",
-    "bookmark__parent-create-wrapper-desc"
+    "bookmarks__parents-create-wrapper-desc"
   );
   newDirWrapperCaptionsBelow.innerHTML =
-    "<aside class='bookmark__parent-create-icon icon-right'>" +
+    "<aside class='bookmarks__parents-create-icon icon-right'>" +
     chrome.i18n.getMessage("icondown") +
-    "</aside><p class='bookmark__parent-create-dir-caption'>" +
+    "</aside><p class='bookmarks__parents-create-dir-caption'>" +
     chrome.i18n.getMessage("chooseparent") +
     "</p>";
   return newDirWrapperCaptionsBelow;
@@ -348,13 +529,14 @@ function addNewDirectoryTextBelow() {
 
 function addNewDirectoryClickableWrapper() {
   var newDirWrapper = document.createElement("div");
-  newDirWrapper.setAttribute("class", "bookmark__parent-create-wrapper");
+  newDirWrapper.setAttribute("class", "bookmarks__parents-create-wrapper");
   return newDirWrapper;
 }
 
 function createInitialTree() {
   chrome.bookmarks.getTree(function(t) {
     wrapper = document.getElementById("wrapper");
+    searchWrapper = document.getElementById("search").parentNode;
 
     var options = {
       shouldSort: true,
@@ -374,7 +556,7 @@ function createInitialTree() {
 
     createUiFromNodes(categoryNodes);
 
-    wrapper.style.width = wrapper.clientWidth + "px";
+    // wrapper.style.width = wrapper.clientWidth + "px";
 
     if (currentNodeCount > 0) {
       focusItem(0);
@@ -383,16 +565,16 @@ function createInitialTree() {
     fuzzySearch = new Fuse(categoryNodes, options);
 
     var newDirWrapperAbove = addNewDirectoryTextAbove();
-    wrapper.parentNode.insertBefore(newDirWrapperAbove, wrapper);
+    searchWrapper.appendChild(newDirWrapperAbove);
     var newDirInputWrapper = addNewDirectoryClickableWrapper();
-    wrapper.parentNode.insertBefore(newDirInputWrapper, wrapper);
-    var newDirWrapperBelow = addNewDirectoryTextBelow();
-    wrapper.parentNode.insertBefore(newDirWrapperBelow, wrapper);
+    searchWrapper.appendChild(newDirInputWrapper);
     var hiddenOutput = addHiddenOutput();
     wrapper.parentNode.insertBefore(hiddenOutput, wrapper);
+    var newDirWrapperBelow = addNewDirectoryTextBelow();
+    wrapper.parentNode.insertBefore(newDirWrapperBelow, wrapper);
     // Add bookmarks' clicks for the tree
     wrapper.addEventListener("click", handleAddBookmark);
-    // Add a bookmarks' click to the bookmark__parent-create-wrapper
+    // Add a bookmarks' click to the bookmarks__parents-create-wrapper
     newDirInputWrapper.addEventListener("click", handleAddBookmark);
   });
 }

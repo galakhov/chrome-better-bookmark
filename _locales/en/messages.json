@@ -6,7 +6,7 @@
   },
   "chooseparent": {
     "message":
-      "You can also link <b>your new folder</b> to a chosen parent by clicking on any radio button",
+      "You can also link <b>your new folder</b> to a parent one by clicking on any radio button down below",
     "description": "Choose parent category text"
   },
   "iconup": {
@@ -19,7 +19,7 @@
   },
   "caption": {
     "message":
-      "Create new directory in a chosen parent directory from the list below",
+      "You are adding this folder to a chosen parent directory shown the breadcrumb below",
     "description": "Caption to show on mouse over"
   },
   "anotherparentdir": {
