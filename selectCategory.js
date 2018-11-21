@@ -152,7 +152,6 @@ function showFullPathOfParentDir(parentSelected, breadcrumbSeparator = "") {
         if (parentNode[0] && parentNode[0].parentId > 0) {
           getBreadcrumbByStartingNode(output, parentNode[0], []);
         } else {
-          console.log("xey3Bo");
           output.innerHTML =
             "<p class='bookmarks__parent-chosen'><b>" + dirName + "</b></p>";
           // just rerender the tree with children
@@ -175,7 +174,6 @@ function handleBreadcrumbLink(el) {
   }
   // switch tree (parent) to the clicked breadcumb
   var nodeId = event.target.getAttribute("data-id-link");
-  console.log("nodeId", nodeId);
   var output = document.querySelector(".bookmarks__breadcrumb");
 
   // remove old event listeners, as the breadcumb will be rerendered
@@ -258,7 +256,6 @@ function getDirectoriesInChildren(categoryNodes) {
 }
 
 function drawTree(categoryNodes) {
-  console.log("NODE?", categoryNodes);
   if (categoryNodes[0] && categoryNodes[0].children.length > 0) {
     var outputSection = document.querySelector(".bookmarks__parents-output");
     var footer = document.querySelector(".bookmarks__parents-output footer");
@@ -345,17 +342,8 @@ function appendRadioButtonParentSelector(el, parentId) {
 function handleRadioButtons(el) {
   var parentSelected = el.target.parentNode;
   if (el.target.closest(".bookmarks__parents-output-footer")) {
-    // if we're in the Tree
-    // TODO: get full path with links
-    // var chosenChildId = el.target.parentNode.getAttribute("data-id-link");
-    // var newChild = document.createElement("strong");
-    // newChild.setAttribute("class", "level-x");
-    // newChild.textContent = el.target.parentNode.getAttribute("data-title");
-    // var chosenChildId = el.target.parentNode.getAttribute("data-id");
-    // newChild.setAttribute("data-id", chosenChildId);
-
-    // console.log("this.parentNode", el.target.parentNode);
-    showFullPathOfParentDir(parentSelected, " > "); // " > " + newChild.textContent
+    // TODO: If we're in the Tree.
+    showFullPathOfParentDir(parentSelected, " > ");
   } else {
     parentClicked = true; // for focusing
     showFullPathOfParentDir(parentSelected, " > ");
