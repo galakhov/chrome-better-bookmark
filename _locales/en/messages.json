@@ -1,7 +1,7 @@
 {
   "new": {
     "message":
-      "Look for a folder by entering its <b>name</b> above first.<br />Not found? Type in the desired <b>name</b> and click on it below to create a new folder.",
+      "Look for a folder by entering its <b>name</b> above first.<br />Nothing found? Type in the desired <b>name</b> and click on it below to create a new folder.",
     "description": "New category text"
   },
   "chooseparent": {
