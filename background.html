@@ -71,7 +71,34 @@
   }
 
   .bookmarks__parent-chosen {
-    margin-bottom: 12px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 2px;
+    position: relative;
+  }
+
+  .bookmarks__parent-chosen:before {
+    content: "";
+    text-align: left;
+    position: absolute;
+    bottom: 2px;
+    left: 4px;
+    width: 98%;
+    height: 10px;
+    background-color: rgb(204,255,204,1);
+    z-index: 30;
+  }
+
+  .bookmarks__parent-chosen:after {
+    content: "";
+    text-align: right;
+    position: absolute;
+    bottom: 2px;
+    right: 34px;
+    width: 10%;
+    height: 32px;
+    background: linear-gradient(to right, rgba(204,255,204,0), rgb(204,255,204,1) 75%);
+    z-index: 30;
   }
 
   .bookmarks__parent-chosen a {
@@ -85,6 +112,10 @@
     display: inline-block;
     font-size: 16px;
     font-weight: 300;
+    position: relative;
+    max-height: 43px;
+    width: 93.7%;
+    overflow: hidden;
   }
 
   span:first-child {
@@ -99,21 +130,23 @@
 
   .spotligh-search {
     top: 0;
-    position: fixed;
+    position: sticky;
     z-index: 100;
-    width: 100%;
+    width: 97%;
     padding: 0;
     background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 2px;
   }
 
   .spotligh-search input {
-    width: 95%;
+    width: 97.5%;
     padding: 9px;
     margin: 20px 12px 12px;
   }
 
   #wrapper {
-    margin-top: 105px;
+    margin-top: 5px;
     min-width: 320px;
     text-align: right;
   }
@@ -151,7 +184,6 @@
 
   .bookmarks__parents-create-wrapper-desc {
     padding-bottom: 0px;
-    border-top: 1px solid #ccc;
     width: 97.8%
   }
 
@@ -193,21 +225,25 @@
   }
 
   .bookmarks__parents-output {
-    max-width: 98%;
+    max-width: 97.7%;
     -webkit-transition: opacity 0.5s ease-out;
     opacity: 0;
-    height: 0;
+    height: auto;
     overflow: hidden;
-
   }
 
   .bookmarks__parents-output.with-children {
-    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
   }
 
   .bookmarks__breadcrumb {
     padding: 0 12px;
-    width: 95.6%;
+    width: 97.5%;
+    max-height: 71px;
+  }
+
+  .breadcrumb__link.current-node {
+    font-weight: 600;
   }
 
   .bookmarks__parents-hidden {
@@ -224,7 +260,7 @@
   }
 
   .bookmarks__parents-output.visible {
-    margin-top: 215px;
+    margin-top: 5px;
   }
 
   .bookmarks__parents-output.visible +
@@ -356,6 +392,7 @@
     display: none;
     position: absolute;
     background-color: #333;
+    opacity: 0.85;
     color: #fff;
     padding: 4px 8px 6px;
     font-size: 16px;

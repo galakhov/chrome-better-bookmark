@@ -101,14 +101,15 @@ function getBreadcrumbByStartingNode(el, node, links) {
       if (links.length <= 1) {
         links.unshift(currentNode);
       }
+      var activeClass = "";
       setTimeout(function() {
         for (var i = 0; i < links.length; i++) {
-          links[i] =
-            "<a class='breadcrumb__link' data-id-link='" +
-            links[i].id +
-            "'>" +
-            links[i].title +
-            "</a>";
+          if (i === links.length - 1) {
+            activeClass = " current-node";
+          }
+          links[i] = `<a class='breadcrumb__link${activeClass}' data-id-link='${
+            links[i].id
+          }'>${links[i].title}</a>`;
         }
         if (el.firstChild) {
           el.removeChild(el.firstChild);
