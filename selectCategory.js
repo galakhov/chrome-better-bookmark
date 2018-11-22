@@ -41,7 +41,7 @@ function filterRecursively(nodeArray, childrenProperty, filterFn, results) {
 function getFullPathRecursively(el, node, titles) {
   var currentNode = node;
 
-  if (currentNode) {
+  if (currentNode && currentNode.parentId) {
     var getParentNode = chrome.bookmarks.get(currentNode.parentId, function(
       parentNode
     ) {
@@ -65,7 +65,7 @@ function createUiElement(node, captions = true) {
   el.setAttribute("data-title", node.title);
   el.setAttribute("data-parent-id", node.parentId);
   el.classList.add("bookmark");
-  if (captions) {
+  if (captions && node && node.parentId) {
     var getParentNode = chrome.bookmarks.get(node.parentId, function(
       parentNode
     ) {
@@ -83,6 +83,9 @@ function createUiElement(node, captions = true) {
 
 function getBreadcrumbByStartingNode(el, node, links) {
   var currentNode = node;
+  if (!currentNode || !currentNode.parentId) {
+    return;
+  }
   var getParentNode = chrome.bookmarks.get(currentNode.parentId, function(
     parentNode
   ) {
@@ -141,7 +144,7 @@ function showFullPathOfParentDir(parentSelected, breadcrumbSeparator = "") {
   }
 
   var output = document.querySelector(".bookmarks__breadcrumb");
-  if (output !== null) {
+  if (output !== null && dirId) {
     if (breadcrumbSeparator) {
       // remove old event listeners, as the breadcumb will be rerendered
       var linksInOutput = document.querySelector(".bookmarks__parent-chosen");
