@@ -461,8 +461,10 @@ function focusItem(index) {
     focusedElement.classList.remove("focus");
   }
   focusedElement = wrapper.childNodes[index];
-  focusedElement.classList.add("focus");
-  focusedElement.scrollIntoView(false);
+  if (focusedElement) {
+    focusedElement.classList.add("focus");
+    focusedElement.scrollIntoView(false);
+  }
 }
 
 function addCreateCategoryButton(categoryName) {
