@@ -262,7 +262,7 @@ function getDirectoriesInChildren(categoryNodes) {
 function drawSubTree(categoryNodes) {
   if (categoryNodes[0] && categoryNodes[0].children.length > 0) {
     var outputSection = document.querySelector(".bookmarks__parents-output");
-    var footer = document.querySelector(".bookmarks__parents-output footer");
+    var footer = document.querySelector(".bookmarks__parents-output-footer");
     while (footer.firstChild) {
       // remove the previously generated tree first
       footer.removeChild(footer.firstChild);
@@ -280,6 +280,11 @@ function drawSubTree(categoryNodes) {
       // If there are children, add a class to a parent to avoid showing border
       if (!outputSection.classList.contains("with-children")) {
         outputSection.classList.add("with-children");
+      }
+
+      // TODO: show children in the sub tree onClick
+      if (!footer.classList.contains("children-hidden")) {
+        footer.classList.add("children-hidden");
       }
       // Tooltip first
       var tooltip =
@@ -495,6 +500,14 @@ function addHiddenOutput() {
   input.setAttribute("name", "parentid");
   input.setAttribute("class", "bookmarks__parents-hidden");
   output.appendChild(input);
+
+  var inputCheckbox = document.createElement("input");
+  inputCheckbox.setAttribute("type", "checkbox");
+  inputCheckbox.setAttribute("name", "children-toggler");
+  inputCheckbox.setAttribute("class", "bookmarks__parents-children-toggler");
+  inputCheckbox.setAttribute("title", chrome.i18n.getMessage("checkbox"));
+  output.appendChild(inputCheckbox);
+
   var footer = document.createElement("footer");
   footer.setAttribute("class", "bookmarks__parents-output-footer");
   output.appendChild(footer);
@@ -575,6 +588,13 @@ function createInitialTree() {
     searchWrapper.appendChild(newDirInputWrapper);
     var hiddenOutput = addHiddenOutput();
     wrapper.parentNode.insertBefore(hiddenOutput, wrapper);
+
+    //var childrenToggler = document.querySelector('input[type="checkbox"]');
+    var childrenToggler = hiddenOutput.querySelector(
+      ".bookmarks__parents-children-toggler"
+    );
+    childrenToggler.addEventListener("click", toggleChildren);
+
     var newDirWrapperBelow = addNewDirectoryTextBelow();
     wrapper.parentNode.insertBefore(newDirWrapperBelow, wrapper);
     // Add bookmarks' clicks for the tree
@@ -582,6 +602,32 @@ function createInitialTree() {
     // Add a bookmarks' click to the bookmarks__parents-create-wrapper
     newDirInputWrapper.addEventListener("click", handleAddBookmark);
   });
+}
+
+function toggleChildren(e) {
+  // e.preventDefault();
+  // console.log("element: ", e.target.value);
+
+  var footerDiv = document.querySelector(".bookmarks__parents-output-footer");
+
+  if (e.target.checked == true) {
+    console.log("checked");
+    if (footerDiv.classList.contains("children-hidden")) {
+      footerDiv.classList.remove("children-hidden");
+    }
+  } else {
+    if (!footerDiv.classList.contains("children-hidden")) {
+      footerDiv.classList.add("children-hidden");
+    }
+    console.log("unchecked");
+  }
+  // if(checkedCount === ingredients.length + 1) {
+  //   overall.checked = true;
+  //   overall.indeterminate = false;
+  // } else {
+  //   overall.checked = false;
+  //   overall.indeterminate = false;
+  // }
 }
 
 (function() {

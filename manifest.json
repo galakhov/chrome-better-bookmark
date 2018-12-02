@@ -2,9 +2,8 @@
   "manifest_version": 2,
 
   "name": "Tree First Bookmarks",
-  "description":
-    "Save a bookmark to any sub-category found by the spotlight-like search. Press cmd+b and use a sub-tree, a breadcrumb, tooltips, etc.",
-  "version": "2.0.2.3",
+  "description": "Save a bookmark to any sub-category found by the spotlight-like search. Press cmd+b and use a sub-tree, a breadcrumb, tooltips, etc.",
+  "version": "2.0.2.5",
   "author": "Szymon Pilkowski, Dmitry Galakhov",
   "homepage_url": "https://github.com/galakhov/chrome-better-bookmark",
   "default_locale": "en",

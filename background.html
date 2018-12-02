@@ -5,6 +5,11 @@
     width: 800px;
   }
 
+  html {
+    /* box-shadow: inset 0 0 100px hsla(0,0%,0%,.1); */
+    height: 100%;
+  }
+
   #wrapper {
     width: 97.8%;
     margin-left: 13px;
@@ -18,6 +23,52 @@
     font-size: 16px;
   }
 
+  /* Styles of checkboxes */
+  input[type="checkbox"] {
+      background-image: -webkit-linear-gradient(hsla(0,0%,0%,.1), hsla(0,0%,100%,.1)),
+                        -webkit-linear-gradient(left, #ccc 50%, #ccffcc 50%);
+      background-size: 100% 100%, 200% 100%;
+      background-position: 0 0, 15px 0;
+      border-radius: 25px;
+      box-shadow: inset 0 1px 4px hsla(0,0%,0%,.5),
+                  inset 0 0 10px hsla(0,0%,0%,.5),
+                  0 0 0 1px hsla(0,0%,0%,.1),
+                  0 -1px 2px 2px hsla(0,0%,0%,.25),
+                  0 2px 2px 2px hsla(0,0%,100%,.75);
+      cursor: pointer;
+      height: 25px;
+      left: 91%;
+      margin: 0px -27px;
+      position: absolute;
+      top: 16px;
+      width: 75px;
+      -webkit-appearance: none;
+      -webkit-transition: .25s;
+      padding: 0;
+  }
+  input[type="checkbox"]:after {
+      background-color: #eee;
+      background-image: -webkit-linear-gradient(hsla(0,0%,100%,.1), hsla(0,0%,0%,.1));
+      border-radius: 25px;
+      box-shadow: inset 0 1px 1px 1px hsla(0,0%,100%,1),
+                  inset 0 -1px 1px 1px hsla(0,0%,0%,.25),
+                  0 1px 3px 1px hsla(0,0%,0%,.5),
+                  0 0 2px hsla(0,0%,0%,.25);
+      content: '';
+      display: block;
+      height: 23px;
+      left: 0;
+      position: relative;
+      top: 0;
+      width: 50px;
+  }
+  input[type="checkbox"]:checked {
+      background-position: 0 0, 35px 0;
+      padding-left: 25px;
+      padding-right: 0;
+  }
+  /* end of checkboxes' styles */
+
   span,
   p {
     font-family: "Lucida Grande", Tahoma, sans-serif;
@@ -26,7 +77,6 @@
     display: block;
     white-space: nowrap;
     padding: 2px 10px;
-    /*border-top: 1px solid #e0efef;*/
     cursor: pointer;
     -webkit-transition: background 0.1s ease-out;
   }
@@ -52,7 +102,7 @@
   .bookmarks__parents-create-dir-name,
   .bookmarks__parent-chosen b {
     border-radius: 5px;
-    background-color: #ccffcc; /* #C5ECFC;*/
+    background-color: #ccffcc;
   }
 
   .bookmarks__parents-create-wrapper .bookmarks__parents-create {
@@ -95,9 +145,9 @@
     position: absolute;
     bottom: 2px;
     right: 34px;
-    width: 10%;
+    width: 13%;
     height: 32px;
-    background: linear-gradient(to right, rgba(204,255,204,0), rgb(204,255,204,1) 75%);
+    background: linear-gradient(to right, rgba(204,255,204,0), rgb(204,255,204,1) 50%);
     z-index: 30;
   }
 
@@ -113,7 +163,7 @@
     font-size: 16px;
     font-weight: 300;
     position: relative;
-    max-height: 43px;
+    max-height: 67px;
     width: 93.7%;
     overflow: hidden;
   }
@@ -232,14 +282,19 @@
     overflow: hidden;
   }
 
-  .bookmarks__parents-output.with-children {
-    border-bottom: 1px solid #ccc;
+  .bookmarks__parents-output.with-children .bookmarks__parents-children-toggler {
+    display: block;
+  }
+
+  .bookmarks__parents-output .bookmarks__parents-children-toggler {
+    display: none;
+    outline: none;
   }
 
   .bookmarks__breadcrumb {
     padding: 0 12px;
     width: 97.5%;
-    max-height: 71px;
+    max-height: 95px;
   }
 
   .breadcrumb__link.current-node {
@@ -261,6 +316,7 @@
 
   .bookmarks__parents-output.visible {
     margin-top: 5px;
+    position: relative;
   }
 
   .bookmarks__parents-output.visible +
@@ -270,6 +326,15 @@
   }
   #wrapper .bookmark {
     margin-bottom: 3px;
+  }
+
+  .bookmarks__parents-output-footer.children-hidden li {
+    display: none;
+    opacity: 0;
+  }
+
+  .bookmarks__parents-output-footer li {
+    opacity: 1;
   }
 
   .bookmarks__parents-output-footer .bookmarks__title {
