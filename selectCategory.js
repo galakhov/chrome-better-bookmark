@@ -605,13 +605,9 @@ function createInitialTree() {
 }
 
 function toggleChildren(e) {
-  // e.preventDefault();
-  // console.log("element: ", e.target.value);
-
   var footerDiv = document.querySelector(".bookmarks__parents-output-footer");
 
   if (e.target.checked == true) {
-    console.log("checked");
     if (footerDiv.classList.contains("children-hidden")) {
       footerDiv.classList.remove("children-hidden");
     }
@@ -619,15 +615,7 @@ function toggleChildren(e) {
     if (!footerDiv.classList.contains("children-hidden")) {
       footerDiv.classList.add("children-hidden");
     }
-    console.log("unchecked");
   }
-  // if(checkedCount === ingredients.length + 1) {
-  //   overall.checked = true;
-  //   overall.indeterminate = false;
-  // } else {
-  //   overall.checked = false;
-  //   overall.indeterminate = false;
-  // }
 }
 
 (function() {

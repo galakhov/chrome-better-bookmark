@@ -1,6 +1,6 @@
-## Tree First Bookmarks
+# Tree First Bookmarks
 
-# This fork of <a href="https://github.com/ardcore/chrome-better-bookmark">"Better Bookmark"</a> is heavily optimised for people who likes the hierarchical folders' structure in their bookmarks and wants to stick to it having tons of (organised) folders.
+### This fork of <a href="https://github.com/ardcore/chrome-better-bookmark">"Better Bookmark"</a> is heavily optimised for people who likes the hierarchical folders' structure in their bookmarks and wants to stick to it having tons of (organised) folders.
 
 - Better Bookmark has been renamed to "Tree First Bookmarks" and gets a new icon from now on.
 - The redesign has happened.
@@ -13,11 +13,13 @@
 
 <p align="center"><img width="320" src="https://raw.githubusercontent.com/galakhov/tree-first-bookmarks/master/screenshot.png" title="Tree First Bookmarks" alt="Tree First Bookmarks"></p>
 
-# chrome-better-bookmark
+# Original chrome-better-bookmark
 
 Chrome Extension that lets you easily add bookmarks to any category. Includes spotlight-like weighted search (http://fusejs.io) with mouse/keyboard support.
 
-WebStore URL: https://chrome.google.com/webstore/detail/tree-first-bookmarks/lempbilidejiiljkciadplnekoflbmnl
+WebStore URL: https://chrome.google.com/webstore/detail/better-bookmark/pniopfmciclllcpockpkgceikipiibol
+
+New _Tree First Bookmarks_ Extension can be found here: https://chrome.google.com/webstore/detail/tree-first-bookmarks/lempbilidejiiljkciadplnekoflbmnl
 
 # key binding: cmd + b / ctrl + b
 
@@ -26,7 +28,7 @@ Chrome allows you to set your own key binding for every extension. See https://g
 # TODO
 
 - Show the location of bookmarked page as the full path in a breadcrumb when the extension was opened
-- Add options (font size and style, focus style, key bindings, sorting options)
+- Add options (font size and style, focus style, key bindings, sorting options, default state of children toggler)
 - Add position of the tooltip into extension's options
 - TBD: icon should be greyed out by default, highlighted if the page is already bookmarked
 - TBD: subcategory indentation?
