@@ -199,7 +199,7 @@ function handleBreadcrumbLink(el) {
   generateTreeOfSelectedNode(nodeId);
 
   /* // add breadcumb point to the search field to filter the results displayed below
-    var searchInput = document.querySelector(".spotligh-search input");
+    var searchInput = document.querySelector(".spotlight-searcht input");
     searchInput.value = event.target.textContent;
     searchInput.focus();
     __triggerKeyboardEvent(searchInput, 8);

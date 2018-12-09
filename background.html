@@ -1,18 +1,22 @@
 <!--<style rel="stylesheet" type="text/css" href="styles.css"></style>-->
 <style>
-  body {
-    color: #333;
-    width: 800px;
-  }
-
   html {
     /* box-shadow: inset 0 0 100px hsla(0,0%,0%,.1); */
     height: 100%;
   }
 
+  body {
+    color: #333;
+    width: 780px;
+    margin: 0;
+  }
+
   #wrapper {
-    width: 97.8%;
-    margin-left: 13px;
+    width: 95.3%;
+    margin-left: 3%;
+    margin-top: 5px;
+    min-width: 320px;
+    text-align: right;
   }
 
   input {
@@ -111,7 +115,7 @@
   }
 
   .bookmark {
-    width: 96.7%;
+    width: 100%;
     height: 35px;
   }
 
@@ -178,27 +182,21 @@
     white-space: normal;
   }
 
-  .spotligh-search {
+  .spotlight-search {
     top: 0;
     position: sticky;
     z-index: 100;
-    width: 97%;
-    padding: 0;
+    width: 97.5%;
+    padding: 1%;
     background-color: #fff;
     border-bottom: 1px solid #ccc;
     padding-bottom: 2px;
   }
 
-  .spotligh-search input {
+  .spotlight-search input {
     width: 97.5%;
     padding: 9px;
     margin: 20px 12px 12px;
-  }
-
-  #wrapper {
-    margin-top: 5px;
-    min-width: 320px;
-    text-align: right;
   }
 
   .bookmarks__title {
@@ -234,7 +232,7 @@
 
   .bookmarks__parents-create-wrapper-desc {
     padding-bottom: 0px;
-    width: 97.8%
+    width: 100%;
   }
 
   .bookmarks__parents-create-wrapper-desc-text p,
@@ -553,7 +551,7 @@
   }
 
 </style>
-<div class="spotligh-search">
+<div class="spotlight-search">
   <input id="search" placeholder="Filter directories..." />
 </div>
 <div id="wrapper"></div>
