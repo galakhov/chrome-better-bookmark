@@ -247,13 +247,20 @@
     text-align: right;
     padding: 4px 0 0;
     line-height: 24px;
+    height: 33px;
   }
 
   .bookmarks__parents-create-icon {
     float: left;
     cursor: default;
-    padding: 0 5px 0 5px;
+    padding: 0px 5px 10px;
+    margin-top: -3px;
     font-size: 22px;
+  }
+
+  .bookmarks__parents-create-icon img {
+    width: 18px;
+    opacity: 0.4;
   }
 
   .bookmarks__parents-text {
@@ -266,7 +273,11 @@
   .icon-right {
     float: right;
     padding: 0;
-    margin: 2px 19px 0 4px;
+    margin: 14px 23px 0 14px;
+  }
+
+  .icon-right img {
+    width: 18px;
   }
 
   .bookmarks__parents-create-dir-name {
@@ -327,6 +338,14 @@
     margin-bottom: 3px;
   }
 
+  .bookmarks__parents-output-footer {
+    margin-bottom: 10px;
+  }
+
+  .bookmarks__parents-output-footer .bookmarks__parents-create-icon {
+    margin-left: 13px;
+  }
+
   .bookmarks__parents-output-footer.children-hidden li {
     display: none;
     opacity: 0;
@@ -359,10 +378,6 @@
   .bookmarks__parents-output-footer li div mark + span {
     position: relative;
     left: 22px;
-  }
-
-  .bookmarks__parents-output-footer {
-    margin-bottom: 10px;
   }
 
   .bookmarks__parents-output .bookmark {

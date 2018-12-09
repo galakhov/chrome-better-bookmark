@@ -8,11 +8,11 @@
     "description": "Choose parent category text"
   },
   "iconup": {
-    "message": "&uparrow;",
+    "message": "&uparrow; Look above",
     "description": "Parent category icon up"
   },
   "icondown": {
-    "message": "&downarrow;",
+    "message": "Look below &downarrow;",
     "description": "Parent category icon down"
   },
   "caption": {

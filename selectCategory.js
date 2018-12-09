@@ -289,7 +289,11 @@ function drawSubTree(categoryNodes) {
       // Tooltip first
       var tooltip =
         "<aside class='bookmarks__parents-create-icon'>" +
+        "<img src='images/up-arrow.png' alt='" +
         chrome.i18n.getMessage("iconup") +
+        "' title='" +
+        chrome.i18n.getMessage("iconup") +
+        "' />" +
         "</aside><p class='bookmarks__parents-text'>" +
         chrome.i18n.getMessage("anotherparentdir") +
         "</p>";
@@ -523,7 +527,11 @@ function addNewDirectoryTextAbove() {
   );
   newDirWrapperCaptionsAbove.innerHTML =
     "<aside class='bookmarks__parents-create-icon'>" +
+    "<img src='images/up-arrow.png' alt='" +
     chrome.i18n.getMessage("iconup") +
+    "' title='" +
+    chrome.i18n.getMessage("iconup") +
+    "' />" +
     "</aside><p>" +
     chrome.i18n.getMessage("new") +
     "</p>";
@@ -538,7 +546,11 @@ function addNewDirectoryTextBelow() {
   );
   newDirWrapperCaptionsBelow.innerHTML =
     "<aside class='bookmarks__parents-create-icon icon-right'>" +
+    "<img src='images/down-arrow.png' alt='" +
     chrome.i18n.getMessage("icondown") +
+    "' title='" +
+    chrome.i18n.getMessage("icondown") +
+    "'/>" +
     "</aside><p class='bookmarks__parents-create-dir-caption'>" +
     chrome.i18n.getMessage("chooseparent") +
     "</p>";
