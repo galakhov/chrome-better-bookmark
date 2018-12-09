@@ -3,9 +3,9 @@
 
   "name": "Tree First Bookmarks",
   "description": "Save a bookmark to any sub-category found by the spotlight-like search. Press cmd+b and use a sub-tree, a breadcrumb, tooltips, etc.",
-  "version": "2.0.2.5",
+  "version": "2.0.2.6",
   "author": "Szymon Pilkowski, Dmitry Galakhov",
-  "homepage_url": "https://github.com/galakhov/chrome-better-bookmark",
+  "homepage_url": "https://github.com/galakhov/tree-first-bookmarks",
   "default_locale": "en",
 
   "background": {
