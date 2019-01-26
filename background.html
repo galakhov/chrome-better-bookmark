@@ -1,4 +1,4 @@
-<!--<style rel="stylesheet" type="text/css" href="styles.css"></style>-->
+<!-- <style rel="stylesheet" type="text/css" href="styles.css"></style> -->
 <style>
   html {
     /* box-shadow: inset 0 0 100px hsla(0,0%,0%,.1); */
@@ -29,47 +29,52 @@
 
   /* Styles of checkboxes */
   input[type="checkbox"] {
-      background-image: -webkit-linear-gradient(hsla(0,0%,0%,.1), hsla(0,0%,100%,.1)),
-                        -webkit-linear-gradient(left, #fff 50%, #ccffcc 50%);
-      background-size: 100% 100%, 200% 100%;
-      background-position: 0 0, 15px 0;
-      border-radius: 25px;
-      /* box-shadow: inset 0 1px 4px hsla(0,0%,0%,.5),
+    background-image: -webkit-linear-gradient(
+        hsla(0, 0%, 0%, 0.1),
+        hsla(0, 0%, 100%, 0.1)
+      ),
+      -webkit-linear-gradient(left, #fff 50%, #ccffcc 50%);
+    background-size: 100% 100%, 200% 100%;
+    background-position: 0 0, 15px 0;
+    border-radius: 25px;
+    /* box-shadow: inset 0 1px 4px hsla(0,0%,0%,.5),
                   inset 0 0 10px hsla(0,0%,0%,.5),
                   0 0 0 1px hsla(0,0%,0%,.1),
                   0 -1px 2px 2px hsla(0,0%,0%,.25),
                   0 2px 2px 2px hsla(0,0%,100%,.75); */
-      cursor: pointer;
-      height: 25px;
-      left: 91%;
-      margin: 0px -27px;
-      position: absolute;
-      top: 16px;
-      width: 75px;
-      -webkit-appearance: none;
-      -webkit-transition: .25s;
-      padding: 0;
+    cursor: pointer;
+    height: 25px;
+    left: 91%;
+    margin: 0px -27px;
+    position: absolute;
+    top: 16px;
+    width: 75px;
+    -webkit-appearance: none;
+    -webkit-transition: 0.25s;
+    padding: 0;
   }
   input[type="checkbox"]:after {
-      background-color: #eee;
-      background-image: -webkit-linear-gradient(hsla(0,0%,100%,.1), hsla(0,0%,0%,.1));
-      border-radius: 25px;
-      box-shadow: inset 0 1px 1px 1px hsla(0,0%,100%,1),
-                  inset 0 -1px 1px 1px hsla(0,0%,0%,.25),
-                  0 1px 3px 1px hsla(0,0%,0%,.5),
-                  0 0 2px hsla(0,0%,0%,.25);
-      content: '';
-      display: block;
-      height: 23px;
-      left: 0;
-      position: relative;
-      top: 0;
-      width: 50px;
+    background-color: #eee;
+    background-image: -webkit-linear-gradient(
+      hsla(0, 0%, 100%, 0.1),
+      hsla(0, 0%, 0%, 0.1)
+    );
+    border-radius: 25px;
+    box-shadow: inset 0 1px 1px 1px hsla(0, 0%, 100%, 1),
+      inset 0 -1px 1px 1px hsla(0, 0%, 0%, 0.25),
+      0 1px 3px 1px hsla(0, 0%, 0%, 0.5), 0 0 2px hsla(0, 0%, 0%, 0.25);
+    content: "";
+    display: block;
+    height: 23px;
+    left: 0;
+    position: relative;
+    top: 0;
+    width: 50px;
   }
   input[type="checkbox"]:checked {
-      background-position: 0 0, 35px 0;
-      padding-left: 25px;
-      padding-right: 0;
+    background-position: 0 0, 35px 0;
+    padding-left: 25px;
+    padding-right: 0;
   }
   /* end of checkboxes' styles */
 
@@ -139,7 +144,7 @@
     left: 4px;
     width: 98%;
     height: 10px;
-    background-color: rgb(204,255,204,1);
+    background-color: rgb(204, 255, 204, 1);
     z-index: 30;
   }
 
@@ -151,7 +156,11 @@
     right: 34px;
     width: 13%;
     height: 32px;
-    background: linear-gradient(to right, rgba(204,255,204,0), rgb(204,255,204,1) 50%);
+    background: linear-gradient(
+      to right,
+      rgba(204, 255, 204, 0),
+      rgb(204, 255, 204, 1) 50%
+    );
     z-index: 30;
   }
 
@@ -292,7 +301,8 @@
     overflow: hidden;
   }
 
-  .bookmarks__parents-output.with-children .bookmarks__parents-children-toggler {
+  .bookmarks__parents-output.with-children
+    .bookmarks__parents-children-toggler {
     display: block;
   }
 
@@ -329,9 +339,9 @@
     position: relative;
   }
 
-  .bookmarks__parents-output.visible +
-  .bookmarks__parents-create-wrapper-desc +
-  #wrapper {
+  .bookmarks__parents-output.visible
+    + .bookmarks__parents-create-wrapper-desc
+    + #wrapper {
     margin-top: 5px;
   }
   #wrapper .bookmark {
@@ -358,7 +368,6 @@
   .bookmarks__parents-output-footer .bookmarks__title {
     width: 93.4%;
   }
-
 
   .bookmarks__parents-output-footer li div mark {
     background-color: #fff;
@@ -395,7 +404,7 @@
 
   .bookmarks__parents-output-footer .bookmarks__title {
     margin-left: 5px;
-    padding: 2px 6px 2px 12px;
+    padding: 2px 6px 2px 10.5px;
     float: right;
     border-left: 1px #999 solid;
     line-height: 31px;
@@ -404,7 +413,7 @@
   .bookmarks__parents-output-footer li .bookmarks__title {
     width: 94%;
     line-height: 34px;
-    padding-left: 8px;
+    padding-left: 7px;
   }
 
   .bookmarks__parents-output-footer ul {
@@ -438,7 +447,7 @@
   .bookmarks__parents-output-footer.sub-tree ul li:first-of-type div,
   .bookmarks__parents-output-footer.sub-tree ul div + li div,
   .bookmarks__parents-output-footer.sub-tree ul div + li > div {
-    background: url('images/pipe.gif') no-repeat 0 0;
+    background: url("images/pipe.gif") no-repeat 0 0;
   }
 
   .bookmarks__parents-output-footer .bookmark--second-level,
@@ -449,7 +458,11 @@
 
   .bookmarks__parents-output-footer .bookmark--second-level span,
   .bookmarks__parents-output-footer .bookmark--second-level-indentation span,
-  .bookmarks__parents-output-footer.sub-tree ul li .bookmark--second-level span {
+  .bookmarks__parents-output-footer.sub-tree
+    ul
+    li
+    .bookmark--second-level
+    span {
     display: block;
     left: 32px;
     position: relative;
@@ -565,7 +578,6 @@
     display: block;
     z-index: 50;
   }
-
 </style>
 <div class="spotlight-search">
   <input id="search" placeholder="Filter directories..." />
