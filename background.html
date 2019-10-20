@@ -28,7 +28,7 @@
   }
 
   /* Styles of checkboxes */
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     background-image: -webkit-linear-gradient(
         hsla(0, 0%, 0%, 0.1),
         hsla(0, 0%, 100%, 0.1)
@@ -53,7 +53,7 @@
     -webkit-transition: 0.25s;
     padding: 0;
   }
-  input[type="checkbox"]:after {
+  input[type='checkbox']:after {
     background-color: #eee;
     background-image: -webkit-linear-gradient(
       hsla(0, 0%, 100%, 0.1),
@@ -63,7 +63,7 @@
     box-shadow: inset 0 1px 1px 1px hsla(0, 0%, 100%, 1),
       inset 0 -1px 1px 1px hsla(0, 0%, 0%, 0.25),
       0 1px 3px 1px hsla(0, 0%, 0%, 0.5), 0 0 2px hsla(0, 0%, 0%, 0.25);
-    content: "";
+    content: '';
     display: block;
     height: 23px;
     left: 0;
@@ -71,7 +71,7 @@
     top: 0;
     width: 50px;
   }
-  input[type="checkbox"]:checked {
+  input[type='checkbox']:checked {
     background-position: 0 0, 35px 0;
     padding-left: 25px;
     padding-right: 0;
@@ -80,7 +80,7 @@
 
   span,
   p {
-    font-family: "Lucida Grande", Tahoma, sans-serif;
+    font-family: 'Lucida Grande', Tahoma, sans-serif;
     font-size: 16px;
     color: #000;
     display: block;
@@ -121,7 +121,8 @@
 
   .bookmark {
     width: 100%;
-    height: 35px;
+    height: 34px;
+    max-height: 34px;
   }
 
   .bookmarks__parents-create-dir-name {
@@ -137,7 +138,7 @@
   }
 
   .bookmarks__parent-chosen:before {
-    content: "";
+    content: '';
     text-align: left;
     position: absolute;
     bottom: 2px;
@@ -149,7 +150,7 @@
   }
 
   .bookmarks__parent-chosen:after {
-    content: "";
+    content: '';
     text-align: right;
     position: absolute;
     bottom: 2px;
@@ -209,14 +210,16 @@
   }
 
   .bookmarks__title {
-    display: inline-block;
+    display: block;
     white-space: normal;
     word-break: break-word;
-    padding: 6px;
+    padding: 6px 6px 6px 9px;
     margin: 0;
-    float: left;
-    line-height: 22px;
+    line-height: 23px;
     width: 94%;
+    max-height: 21px;
+    float: left;
+    overflow-y: hidden;
   }
 
   .bookmarks__parents-id-selector {
@@ -224,7 +227,7 @@
     margin-bottom: 0px;
     display: inline-block;
     height: 14px;
-    margin: 11px 9px 0 0;
+    margin: 12px 9px 0 0;
   }
 
   .bookmarks__parents-create {
@@ -345,7 +348,7 @@
     margin-top: 5px;
   }
   #wrapper .bookmark {
-    margin-bottom: 3px;
+    margin-bottom: 6px;
   }
 
   .bookmarks__parents-output-footer {
@@ -392,6 +395,9 @@
   .bookmarks__parents-output .bookmark {
     width: 97.8%;
     display: inline-block;
+    overflow-y: hidden;
+    height: 36px;
+    max-height: 36px;
   }
 
   .bookmarks__parents-output-footer .bookmarks__parents-id-selector {
@@ -408,11 +414,13 @@
     float: right;
     border-left: 1px #999 solid;
     line-height: 31px;
+    height: 32px;
+    max-height: 32px;
   }
 
   .bookmarks__parents-output-footer li .bookmarks__title {
     width: 94%;
-    line-height: 34px;
+    line-height: 31px;
     padding-left: 7px;
   }
 
@@ -425,6 +433,7 @@
 
   .bookmarks__parents-output-footer ul li {
     margin-left: 31px;
+    height: 36px;
   }
 
   .bookmarks__parents-output-footer span:hover {
@@ -447,7 +456,7 @@
   .bookmarks__parents-output-footer.sub-tree ul li:first-of-type div,
   .bookmarks__parents-output-footer.sub-tree ul div + li div,
   .bookmarks__parents-output-footer.sub-tree ul div + li > div {
-    background: url("images/pipe.gif") no-repeat 0 0;
+    background: url('images/pipe.gif') no-repeat 0 0;
   }
 
   .bookmarks__parents-output-footer .bookmark--second-level,
@@ -496,8 +505,8 @@
     white-space: normal;
   }
   /* Dynamic horizontal centering */
-  [data-tooltip-position="top"]:before,
-  [data-tooltip-position="bottom"]:before {
+  [data-tooltip-position='top']:before,
+  [data-tooltip-position='bottom']:before {
     left: 95.5%;
     -ms-transform: translateX(-100%);
     -moz-transform: translateX(-100%);
@@ -505,34 +514,34 @@
     transform: translateX(-100%);
   }
   /* Dynamic vertical centering */
-  [data-tooltip-position="right"]:before,
-  [data-tooltip-position="left"]:before {
+  [data-tooltip-position='right']:before,
+  [data-tooltip-position='left']:before {
     top: 50%;
     -ms-transform: translateY(-50%);
     -moz-transform: translateY(-50%);
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
   }
-  [data-tooltip-position="top"]:before {
+  [data-tooltip-position='top']:before {
     bottom: 100%;
     margin-bottom: 6px;
   }
-  [data-tooltip-position="right"]:before {
+  [data-tooltip-position='right']:before {
     left: 100%;
     margin-left: 6px;
   }
-  [data-tooltip-position="bottom"]:before {
+  [data-tooltip-position='bottom']:before {
     top: 100%;
     margin-top: 6px;
   }
-  [data-tooltip-position="left"]:before {
+  [data-tooltip-position='left']:before {
     right: 100%;
     margin-right: 6px;
   }
 
   /* Tooltip arrow styling/placement */
   [data-tooltip]:after {
-    content: "";
+    content: '';
     display: none;
     position: absolute;
     width: 0;
@@ -541,33 +550,33 @@
     border-style: solid;
   }
   /* Dynamic horizontal centering for the tooltip */
-  [data-tooltip-position="top"]:after,
-  [data-tooltip-position="bottom"]:after {
+  [data-tooltip-position='top']:after,
+  [data-tooltip-position='bottom']:after {
     left: 92%;
     margin-left: -6px;
   }
   /* Dynamic vertical centering for the tooltip */
-  [data-tooltip-position="right"]:after,
-  [data-tooltip-position="left"]:after {
+  [data-tooltip-position='right']:after,
+  [data-tooltip-position='left']:after {
     top: 50%;
     margin-top: -6px;
   }
-  [data-tooltip-position="top"]:after {
+  [data-tooltip-position='top']:after {
     bottom: 100%;
     border-width: 6px 6px 0;
     border-top-color: #000;
   }
-  [data-tooltip-position="right"]:after {
+  [data-tooltip-position='right']:after {
     left: 100%;
     border-width: 6px 6px 6px 0;
     border-right-color: #000;
   }
-  [data-tooltip-position="bottom"]:after {
+  [data-tooltip-position='bottom']:after {
     top: 100%;
     border-width: 0 6px 6px;
     border-bottom-color: #000;
   }
-  [data-tooltip-position="left"]:after {
+  [data-tooltip-position='left']:after {
     right: 100%;
     border-width: 6px 0 6px 6px;
     border-left-color: #000;
