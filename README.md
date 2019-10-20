@@ -17,18 +17,27 @@
 
 Chrome Extension that lets you easily add bookmarks to any category. Includes spotlight-like weighted search (http://fusejs.io) with mouse/keyboard support.
 
-WebStore URL: https://chrome.google.com/webstore/detail/better-bookmark/pniopfmciclllcpockpkgceikipiibol
+_WebStore URL of the original simplified version of this extension_: https://chrome.google.com/webstore/detail/better-bookmark/pniopfmciclllcpockpkgceikipiibol
 
-New _Tree First Bookmarks_ Extension can be found here: https://chrome.google.com/webstore/detail/tree-first-bookmarks/lempbilidejiiljkciadplnekoflbmnl
+The new advanced _Tree First Bookmarks_ extension can be found here: https://chrome.google.com/webstore/detail/tree-first-bookmarks/lempbilidejiiljkciadplnekoflbmnl
 
 # key binding: cmd + b / ctrl + b
 
 Chrome allows you to set your own key binding for every extension. See https://github.com/ardcore/chrome-better-bookmark/issues/1
 
-# TODO
+# TODO's
 
-- Show the location of bookmarked page as the full path in a breadcrumb when the extension was opened
-- Add options (font size and style, focus style, key bindings, sorting options, default state of children toggler)
-- Add position of the tooltip into extension's options
-- TBD: icon should be greyed out by default, highlighted if the page is already bookmarked
-- TBD: subcategory indentation?
+- [ ] Show the location of the bookmark as the full path in the breadcrumb when a user opens the extension and the page was already bookmarked
+- [ ] Add options (font size and style, focus style, key bindings, sorting options, etc.)
+- [ ] Add the position variants (top or bottom) of the tooltip into the extension's options
+- [ ] TBD: icon should be greyed out by default, highlighted if the page is already bookmarked
+- [x] Default state of the children's toggler (if a user navigates between nodes it switches back to the disabled state)
+- [x] TBD: subcategory indentation
+
+# Thanks to
+
+Big thanks goes to [ardcore](https://github.com/ardcore) and his initial version of open sourced repo of [chrome-better-bookmark](https://github.com/ardcore/chrome-better-bookmark)s.
+
+The evolution of development and the pull request can be found [here](https://github.com/ardcore/chrome-better-bookmark/pull/6).
+
+Meanwhile, I've switched to the refined 2nd version of the [tree-first-bookmarks](https://github.com/galakhov/tree-first-bookmarks-v2)
